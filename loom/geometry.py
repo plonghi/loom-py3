@@ -1609,6 +1609,8 @@ def get_ramification_points_using_discriminant(
             # Check if z_i is one of the punctures.
             is_puncture = False
             for p in punctures:
+                print('z_i = ', z_i)
+                print('p.Ciz= ', p.Ciz)
                 if abs(z_i - p.Ciz) < accuracy:
                     is_puncture = True
             if is_puncture:
