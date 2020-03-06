@@ -2,7 +2,7 @@ import os
 import numpy
 import logging
 # import pdb
-import Tkinter as tk
+import tkinter as tk
 
 import matplotlib
 from matplotlib.backends.backend_tkagg import (

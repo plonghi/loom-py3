@@ -1156,7 +1156,6 @@ class SWDataBase(object):
             g_data = self.g_data
 
             if g_data.type == 'A' or g_data.type == 'D':
-                print type(num_eq)
                 # local_curve = (
                 #     num_eq.subs(x, rp.x + dx).subs(z, rp.z + dz)
                 #     .series(dx, 0, rp.i + 1).removeO()
@@ -1315,6 +1314,11 @@ class SWDataBase(object):
             # is the jacobian from z-plane rotations or PSL2C transformations.
             num_v = self.diff.num_v
 
+            print('this is num_v: ', num_v)
+            print('this is dx_dz', dx_dz)
+            print('this is rp.x', rp.x)
+            print('this is rp.z', rp.z)
+
             # now we plug this into num_v, in a neighborhood of x_0
             # we have x = x_0 + dx_dz.
             if (
@@ -1325,6 +1329,8 @@ class SWDataBase(object):
                     num_v.subs(x, rp.x + dx_dz).subs(z, rp.z + dz)
                     .series(dz, 0, 1).removeO()
                 )
+                print('this is the local differential: ',local_diff)
+                print('this is the substitution into num_v: ', num_v.subs(x, rp.x + dx_dz).subs(z, rp.z + dz))
                 # get the coefficient and the exponent of the leading term
                 (diff_c, diff_e) = local_diff.leadterm(dz)
                 if diff_e == 0:

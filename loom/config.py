@@ -1,4 +1,4 @@
-import ConfigParser
+import configparser
 import logging
 # import pdb
 
@@ -14,7 +14,7 @@ class LoomConfig:
         # The data dict has option values as Python objects,
         # some of them being strings.
         self.data = {}
-        self.parser = ConfigParser.SafeConfigParser()
+        self.parser = configparser.SafeConfigParser()
         # attribute options has the following structure:
         # options['section']['option'] = 'label'
         self.options = {
