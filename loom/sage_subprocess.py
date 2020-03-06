@@ -67,7 +67,8 @@ def solve_single_eq_single_var(
     else:
         try:
             rv_str = subprocess.check_output(
-                [sage_bin_path, sage_script_dir + 'solve_single_eq_single_var.sage'] +
+                [sage_bin_path, sage_script_dir + 
+                    'solve_single_eq_single_var.sage'] +
                 [str(precision), str(eq), var]
             )
         except (KeyboardInterrupt, SystemExit):
@@ -121,3 +122,34 @@ def compute_discriminant(f):
         return 0
     else:
         return poly(disc_sym)
+
+def series_expand(
+        expression, vars_list, x0_list, degrees_list, logger_name='loom',
+    ):
+    """
+    Use sage to compute a multivariate series expansion.
+    arguments should be as follows: 
+    expression, list of variables, list of expansion points, list of expansion 
+    degrees. 
+    Example: in terminal one would write
+        sage series_expand.sage '(1+x+y)**2' 'x, y' '[0.0, I]' '[2,2]'
+    this will return
+        (2*x + 2*I + 2)*(y - I) + (2*I + 2)*x + 2*I
+    """
+    logger = logging.getLogger(logger_name)
+
+    # for the variable list, we turn it into a string like '[x, y]'
+    # we then remove the brackets from the string (this is necessary 
+    # formatting for the sage script, see there), to yield 'x, y'
+    try:
+        ans_str = subprocess.check_output(
+            [sage_bin_path, sage_script_dir + 'series_expand.sage',
+            str(expression),
+            str(vars_list)[1:-1],
+            str(x0_list),
+            str(degrees_list)]
+        )
+    except (KeyboardInterrupt, SystemExit):
+        raise
+
+    return ans_str  

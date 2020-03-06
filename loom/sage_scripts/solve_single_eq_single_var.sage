@@ -56,10 +56,6 @@ var(var_name)
 R = PolynomialRing(CDF, ('%s' % var_name))
 eq = R(eval(eq_str))
 sols = eq.roots()
-#sol_var = var(str(var_name))
-#var('z')
-#eq = eval(eq_str)
-#sols = eq.roots(sol_var)
 
 sols_str = []
 sols_mul = []

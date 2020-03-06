@@ -6,7 +6,7 @@ import json
 import mpmath
 # import pdb
 
-from sympy import oo, I
+from sympy import oo, I, sympify
 from mpmath import mp
 from itertools import combinations
 from cmath import phase, pi
@@ -1156,17 +1156,34 @@ class SWDataBase(object):
             g_data = self.g_data
 
             if g_data.type == 'A' or g_data.type == 'D':
-                local_curve = (
-                    num_eq.subs(x, rp.x + dx).subs(z, rp.z + dz)
-                    .series(dx, 0, rp.i + 1).removeO()
-                    .series(dz, 0, 2).removeO()
-                )
+                print type(num_eq)
+                # local_curve = (
+                #     num_eq.subs(x, rp.x + dx).subs(z, rp.z + dz)
+                #     .series(dx, 0, rp.i + 1).removeO()
+                #     .series(dz, 0, 2).removeO()
+                # )
+                local_curve = sympify(
+                        sage_subprocess.series_expand(
+                            str(num_eq.subs(x, rp.x + dx).subs(z, rp.z + dz)), 
+                            [dx, dz], 
+                            [0, 0], 
+                            [rp.i + 1, 2]
+                        )
+                    )
             elif g_data.type == 'E' and g_data.rank == 6:
-                local_curve = (
-                    num_eq.subs(x, rp.x + dx).subs(z, rp.z + dz)
-                    .series(dx, 0, rp.i + 1).removeO()
-                    .series(dz, 0, 3).removeO()
-                )
+                # local_curve = (
+                #     num_eq.subs(x, rp.x + dx).subs(z, rp.z + dz)
+                #     .series(dx, 0, rp.i + 1).removeO()
+                #     .series(dz, 0, 3).removeO()
+                # )
+                local_curve = sympify(
+                        sage_subprocess.series_expand(
+                            str(num_eq.subs(x, rp.x + dx).subs(z, rp.z + dz)), 
+                            [dx, dz], 
+                            [0, 0], 
+                            [rp.i + 1, 3]
+                        )
+                    )
             else:
                 raise NotImplementedError
             logger.debug('\nlocal curve = {}\n'.format(local_curve))
