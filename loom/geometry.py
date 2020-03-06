@@ -1648,7 +1648,7 @@ def get_ramification_points_from_branch_points(
 
     # Find the roots of f(x, z=z_i) for the branch points {z_i}.
     for z_i in branch_points:
-        subs_dict[z] = z_i
+        subs_dict[z] = complex(z_i)
         f_x_eq = f.subs(subs_dict).evalf(n=ROOT_FINDING_PRECISION)
         f_x_roots = sage_subprocess.solve_single_eq_single_var(
             f_x_eq,
