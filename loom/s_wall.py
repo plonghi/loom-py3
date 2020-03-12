@@ -287,8 +287,8 @@ class SWall(object):
         puncture_point_zs,
         config,
     ):
-        bpzs = branch_point_zs
-        ppzs = puncture_point_zs
+        bpzs = [complex(z1) for z1 in branch_point_zs]
+        ppzs = [complex(z1) for z1 in puncture_point_zs]
         size_of_small_step = config['size_of_small_step']
         size_of_large_step = config['size_of_large_step']
         size_of_bp_neighborhood = config['size_of_bp_neighborhood']
@@ -440,7 +440,7 @@ class SWall(object):
         # organized  as      [..., [branch_point_idx, t, 'ccw'] ,...]
         # where 't' is the integer of proper time at the intersection.
         self.cuts_intersections = sorted(
-            cuts_intersections, cmp=lambda k1, k2: cmp(k1[1], k2[1])
+            cuts_intersections, key=(lambda k: k[1])
         )
         logger.debug(
             'S-wall {} intersects the following cuts at the points\n{}.'
@@ -478,7 +478,7 @@ class SWall(object):
                 for t_i, z_i in enumerate(self.z) if (
                     (abs(z_i) < max_radius or t_i == 0) and t_i < 500
                 )
-            ]), cmp=lambda a, b: cmp(a[1], b[1])
+            ]), key=lambda a: a[1]
         )[-1][0]
 
         z_0 = self.z[t_0]
