@@ -400,7 +400,7 @@ def get_label(value, dictionary):
 
     if is_in_dictionary:
         return [
-            k for k, v in dictionary.iteritems() if numpy.array_equal(v, value)
+            k for k, v in dictionary.items() if numpy.array_equal(v, value)
         ][0]
     else:
         return 'Not a root: {}'.format(value)

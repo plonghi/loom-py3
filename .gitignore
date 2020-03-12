@@ -8,3 +8,6 @@ logs/*.txt
 logs/webmain_pid
 cache/
 data/
+*.ipynb
+*.ipynb_checkpoints
+

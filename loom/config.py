@@ -104,8 +104,8 @@ class LoomConfig:
     def keys(self):
         return self.data.keys()
 
-    def iteritems(self):
-        return self.data.iteritems()
+    def items(self):
+        return self.data.items()
 
     def read(self, config_file):
         """
@@ -117,7 +117,7 @@ class LoomConfig:
 
         for section in self.parser.sections():
             try:
-                not_configured_options = self.options[section].keys()
+                not_configured_options = list(self.options[section].keys())
             except KeyError:
                 self.parser.remove_section(section)
                 raise ValueError('Unknown section \'{}\'. in the config file.'
