@@ -106,7 +106,7 @@ def remove_duplicate(a_list, compare):
 
 def n_remove_duplicate(a_list, accuracy):
     compare = lambda a, b: abs(a - b) < accuracy
-    return gather(a_list, compare).keys()
+    return list(gather(a_list, compare).keys())
 
 
 def n_nearest(a_list, value, n):
