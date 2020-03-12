@@ -114,8 +114,7 @@ def n_nearest(a_list, value, n):
     Find n elements of a_list nearest to value and return them,
     by comparing the euclidean norms.
     """
-    compare = lambda v1, v2: cmp(abs(v1 - value), abs(v2 - value))
-    return sorted(a_list, cmp=compare)[:n]
+    return sorted(a_list, key=(lambda v: abs(v - value)))[:n]
 
 
 def n_nearest_indices(a_list, value, n):
@@ -123,9 +122,7 @@ def n_nearest_indices(a_list, value, n):
     Find n elements of a_list nearest to value and return their indices,
     by comparing the euclidean norms.
     """
-    compare = lambda v1, v2: cmp(abs(v1 - value), abs(v2 - value))
-    key = lambda k: a_list[k]
-    sorted_indices = sorted(range(len(a_list)), cmp=compare, key=key)
+    sorted_indices = sorted(range(len(a_list)), key=(lambda v: abs(v - value)))
     return sorted_indices[:n]
 
 

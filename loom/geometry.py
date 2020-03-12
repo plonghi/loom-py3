@@ -474,7 +474,7 @@ class SWCurve:
         if use_sage is False:
             fx = self.num_eq.subs(z, z_0)
             sym_poly = sympy.Poly(fx, x, domain='CC')
-            coeff_list = map(complex, sym_poly.all_coeffs())
+            coeff_list = list(map(complex, sym_poly.all_coeffs()))
             return numpy.roots(coeff_list)
         else:
             f_x_eq = self.num_eq.subs(z, z_0).evalf(n=ROOT_FINDING_PRECISION)
@@ -1723,7 +1723,7 @@ def find_xs_at_z_0(
         return xs_at_z_0
     else:
         return sorted(
-            xs_at_z_0, lambda x1, x2: cmp(abs(x1 - x_0), abs(x2 - x_0))
+            xs_at_z_0, key=(lambda x: abs(x - x_0))
         )[:num_x]
 
 
