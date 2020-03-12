@@ -762,8 +762,8 @@ def get_s_wall_root(z, ffr_xs, sw_data):
             # Sheet matching x_j
             closest_to_x_j = sorted(xs_at_z, key=lambda x: abs(x - x_j))[0]
             j = (
-                [k for k, v in sheets_at_z.iteritems()
-                    if v == closest_to_x_j][0]
+                [k for k in sheets_at_z
+                    if sheets_at_z[k] == closest_to_x_j][0]
             )
             for k in i_s:
                 # NOTE: Assuming that there is precisely ONE pair
@@ -785,8 +785,8 @@ def get_s_wall_root(z, ffr_xs, sw_data):
             # Sheet matching x_i
             closest_to_x_i = sorted(xs_at_z, key=lambda x: abs(x - x_i))[0]
             i = (
-                [k for k, v in sheets_at_z.iteritems()
-                    if v == closest_to_x_i][0]
+                [k for k in sheets_at_z
+                    if sheets_at_z[k] == closest_to_x_i][0]
             )
             # Several sheets matching x_j
             closest_to_x_j = sorted(
@@ -813,10 +813,10 @@ def get_s_wall_root(z, ffr_xs, sw_data):
     else:
         # Sheet matching x_i
         closest_to_x_i = sorted(xs_at_z, key=lambda x: abs(x - x_i))[0]
-        i = [k for k, v in sheets_at_z.iteritems() if v == closest_to_x_i][0]
+        i = [k for k in sheets_at_z if sheets_at_z[k] == closest_to_x_i][0]
         # Sheet matching x_j
         closest_to_x_j = sorted(xs_at_z, key=lambda x: abs(x - x_j))[0]
-        j = [k for k, v in sheets_at_z.iteritems() if v == closest_to_x_j][0]
+        j = [k for k in sheets_at_z if sheets_at_z[k] == closest_to_x_j][0]
 
     return sw_data.g_data.ffr_weights[j] - sw_data.g_data.ffr_weights[i]
 
