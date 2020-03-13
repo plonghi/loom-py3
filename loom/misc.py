@@ -4,6 +4,8 @@ import itertools
 import numpy
 import sympy
 import warnings
+import json
+import numpy as np
 # import pdb
 
 from fractions import Fraction
@@ -494,3 +496,18 @@ def get_phases_from_dict(phase_dict, accuracy):
             phases.append(entry)
 
     return phases
+
+class NpEncoder(json.JSONEncoder):
+    """
+    Encodes numpy formatted numbers for saving with json.
+    """
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        else:
+            return super(NpEncoder, self).default(obj)
+

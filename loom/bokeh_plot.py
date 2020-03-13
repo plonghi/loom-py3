@@ -149,9 +149,7 @@ def get_spectral_network_bokeh_plot(
     )
 
     # Data source for the current plot
-    cds = ColumnDataSource({
-        'xs': [],
-        'ys': [],
+    cds = {
         'ranges': [],
         'color': [],
         'arrow_x': [],
@@ -159,7 +157,9 @@ def get_spectral_network_bokeh_plot(
         'arrow_angle': [],
         'label': [],
         'root': [],
-    })
+        'xs': [],
+        'ys': []
+    }
 
     # Data source for plotting data points
     dpds = ColumnDataSource({
@@ -232,18 +232,33 @@ def get_spectral_network_bokeh_plot(
         init_data = snds.data['spectral_networks'][0]
 
     # Initialization of the current plot data source.
-    for key in cds.data.keys():
-        cds.data[key] = init_data[key]
-
-    bokeh_figure.scatter(x='x', y='y', alpha=0.5, source=dpds,)
-
-    bokeh_figure.multi_line(
-        xs='xs', ys='ys', color='color', line_width=1.5, source=cds,
+    for key in cds.keys():
+        cds[key] = init_data[key]
+        
+    # prepare data sources for various objects to be plotted
+    lines_ds = ColumnDataSource(
+        data={k: cds[k] for k in ['xs', 'ys', 'color'] if k in cds}
+    )
+    arrows_ds = ColumnDataSource(
+        data={k: cds[k] for k in 
+              ['arrow_x', 'arrow_y', 'color', 'arrow_angle'] 
+              if k in cds
+             }
     )
 
+    bokeh_figure.scatter(x='x', y='y', alpha=0.5, source=dpds,)
+    
+    # draw lines
+    bokeh_figure.multi_line(
+        xs='xs', ys='ys', color='color', line_width=1.5, 
+        source=lines_ds,
+    )
+
+    # draw arrows
     bokeh_figure.triangle(
-        x='arrow_x', y='arrow_y', color='color', angle='arrow_angle',
-        size=8, source=cds,
+        x='arrow_x', y='arrow_y', color='color', 
+        angle='arrow_angle', size=8, 
+        source=arrows_ds,
     )
 
     bokeh_obj = {}
@@ -387,7 +402,7 @@ def get_spectral_network_bokeh_plot(
                 ),
             )
         )
-        plot = vform(bokeh_figure, sn_slider, width=plot_width,)
+        plot = column(bokeh_figure, sn_slider)
         notebook_vform_elements = (
             [bokeh_figure, sn_slider] + notebook_vform_elements
         )

@@ -926,9 +926,9 @@ class SWDataBase(object):
         self.z_plane_rotation /= z_rotation
 
     def save(self, file_path):
-        with open(file_path, 'wb') as fp:
+        with open(file_path, 'w', encoding='utf-8') as f:
             json_data = self.get_json_data()
-            json.dump(json_data, fp,)
+            json.dump(json_data, f,)
 
     def get_json_data(self):
         json_data = {
