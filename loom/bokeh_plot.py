@@ -6,10 +6,10 @@ import bokeh
 from cmath import phase, pi
 from copy import deepcopy
 from sympy import oo
-from bokeh.io import vform
+# from bokeh.io import vform
 from bokeh.models import CustomJS, ColumnDataSource, Slider
 from bokeh.models import (HoverTool, BoxZoomTool, PanTool, WheelZoomTool,
-                          ResetTool, PreviewSaveTool, TapTool,)
+                          ResetTool, SaveTool, TapTool,)
 from bokeh.models.widgets import Button
 # from bokeh.models.widgets import Toggle
 from bokeh.plotting import figure
@@ -81,7 +81,7 @@ def get_spectral_network_bokeh_plot(
     # Prepare a bokeh Figure.
     bokeh_figure = figure(
         tools=[ResetTool(), BoxZoomTool(), PanTool(), WheelZoomTool(),
-               PreviewSaveTool(), TapTool(), hover],
+               SaveTool(), TapTool(), hover],
         plot_width=plot_width,
         plot_height=plot_height,
         title=None,
@@ -269,14 +269,17 @@ def get_spectral_network_bokeh_plot(
     # 'Redraw arrows' button.
     redraw_arrows_button = Button(
         label='Redraw arrows',
-        callback=CustomJS(
+    )
+    redraw_arrows_button.js_on_event(
+        ButtonClick,
+        CustomJS(
             args={
                 'cds': cds,
                 'x_range': bokeh_figure.x_range,
                 'y_range': bokeh_figure.y_range
             },
             code=(custom_js_code + 'redraw_arrows(cds, x_range, y_range);'),
-        ),
+        )
     )
     bokeh_obj['redraw_arrows_button'] = redraw_arrows_button
     notebook_vform_elements.append(redraw_arrows_button)
@@ -285,9 +288,12 @@ def get_spectral_network_bokeh_plot(
     show_data_points_button = Button(
         label='Show data points',
     )
-    show_data_points_button.callback = CustomJS(
-        args={'cds': cds, 'dpds': dpds, 'hover': hover},
-        code=(custom_js_code + 'show_data_points(cds, dpds, hover);'),
+    show_data_points_button.js_on_event(
+        ButtonClick,
+        CustomJS(
+            args={'cds': cds, 'dpds': dpds, 'hover': hover},
+            code=(custom_js_code + 'show_data_points(cds, dpds, hover);'),
+        )
     )
     bokeh_obj['show_data_points_button'] = show_data_points_button
     notebook_vform_elements.append(show_data_points_button)
@@ -296,9 +302,12 @@ def get_spectral_network_bokeh_plot(
     hide_data_points_button = Button(
         label='Hide data points',
     )
-    hide_data_points_button.callback = CustomJS(
-        args={'cds': cds, 'dpds': dpds, 'hover': hover},
-        code=(custom_js_code + 'hide_data_points(cds, dpds, hover);'),
+    hide_data_points_button.js_on_event(
+        ButtonClick,
+        CustomJS(
+            args={'cds': cds, 'dpds': dpds, 'hover': hover},
+            code=(custom_js_code + 'hide_data_points(cds, dpds, hover);'),
+        )
     )
     bokeh_obj['hide_data_points_button'] = hide_data_points_button
     notebook_vform_elements.append(hide_data_points_button)
@@ -314,17 +323,20 @@ def get_spectral_network_bokeh_plot(
         prev_soliton_tree_button = Button(
             label='<',
         )
-        prev_soliton_tree_button.callback = CustomJS(
-            args={
-                'cds': cds, 'snds': snds, 'sn_idx_ds': sn_idx_ds,
-                'tree_idx_ds': tree_idx_ds,
-                'plot_options_ds': plot_options_ds,
-            },
-            code=(
-                custom_js_code +
-                'show_prev_soliton_tree(cds, snds, sn_idx_ds, tree_idx_ds, '
-                'plot_options_ds);'
-            ),
+        prev_soliton_tree_button.js_on_event(
+            ButtonClick,
+            CustomJS(
+                args={
+                    'cds': cds, 'snds': snds, 'sn_idx_ds': sn_idx_ds,
+                    'tree_idx_ds': tree_idx_ds,
+                    'plot_options_ds': plot_options_ds,
+                },
+                code=(
+                    custom_js_code +
+                    'show_prev_soliton_tree(cds, snds, sn_idx_ds, tree_idx_ds, '
+                    'plot_options_ds);'
+                ),
+            )
         )
         bokeh_obj['prev_soliton_tree_button'] = prev_soliton_tree_button
         notebook_vform_elements.append(prev_soliton_tree_button)
@@ -332,17 +344,20 @@ def get_spectral_network_bokeh_plot(
         next_soliton_tree_button = Button(
             label='>',
         )
-        next_soliton_tree_button.callback = CustomJS(
-            args={
-                'cds': cds, 'snds': snds, 'sn_idx_ds': sn_idx_ds,
-                'tree_idx_ds': tree_idx_ds,
-                'plot_options_ds': plot_options_ds,
-            },
-            code=(
-                custom_js_code +
-                'show_next_soliton_tree(cds, snds, sn_idx_ds, tree_idx_ds, '
-                'plot_options_ds);'
-            ),
+        next_soliton_tree_button.js_on_event(
+            ButtonClick,
+            CustomJS(
+                args={
+                    'cds': cds, 'snds': snds, 'sn_idx_ds': sn_idx_ds,
+                    'tree_idx_ds': tree_idx_ds,
+                    'plot_options_ds': plot_options_ds,
+                },
+                code=(
+                    custom_js_code +
+                    'show_next_soliton_tree(cds, snds, sn_idx_ds, tree_idx_ds, '
+                    'plot_options_ds);'
+                ),
+            )
         )
         bokeh_obj['next_soliton_tree_button'] = next_soliton_tree_button
         notebook_vform_elements.append(next_soliton_tree_button)
@@ -355,17 +370,20 @@ def get_spectral_network_bokeh_plot(
             value=0, step=1, title="spectral network #"
         )
 
-        sn_slider.callback = CustomJS(
-            args={
-                'cds': cds, 'snds': snds, 'sn_idx_ds': sn_idx_ds,
-                'dpds': dpds, 'pds': pds, 'hover': hover,
-                'plot_options': plot_options_ds, 'tree_idx_ds': tree_idx_ds
-            },
-            code=(
-                custom_js_code +
-                'sn_slider(cb_obj, cds, snds, sn_idx_ds, dpds, pds, hover, '
-                'plot_options, tree_idx_ds);'
-            ),
+        sn_slider.js_on_change(
+            'value',
+            CustomJS(
+                args={
+                    'cds': cds, 'snds': snds, 'sn_idx_ds': sn_idx_ds,
+                    'dpds': dpds, 'pds': pds, 'hover': hover,
+                    'plot_options': plot_options_ds, 'tree_idx_ds': tree_idx_ds
+                },
+                code=(
+                    custom_js_code +
+                    'sn_slider(cb_obj, cds, snds, sn_idx_ds, dpds, pds, hover, '
+                    'plot_options, tree_idx_ds);'
+                ),
+            )
         )
         plot = vform(bokeh_figure, sn_slider, width=plot_width,)
         notebook_vform_elements = (
