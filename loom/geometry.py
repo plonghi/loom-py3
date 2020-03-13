@@ -1679,12 +1679,8 @@ def get_ramification_points_from_branch_points(
             lambda a, b: abs(a - b) < accuracy / X_ROOTS_ACCURACY_FACTOR
         )
         gathered_f_x_roots = gather(f_x_roots, is_same_x)
-<<<<<<< HEAD
         for x_j in gathered_f_x_roots:
             xs = gathered_f_x_roots[x_j]
-=======
-        for x_j, xs in gathered_f_x_roots.items():
->>>>>>> stable_v3
             no_ramification = True
             # m_x is the multiplicity of x_j.
             m_x = len(xs)

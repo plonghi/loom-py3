@@ -1,10 +1,7 @@
 import os
 import numpy
 import logging
-<<<<<<< HEAD
 # import pdb
-=======
->>>>>>> stable_v3
 import tkinter as tk
 
 import matplotlib

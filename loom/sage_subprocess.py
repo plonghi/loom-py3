@@ -29,11 +29,7 @@ def solve_system_of_eqs(eqs, precision=None, logger_name='loom',):
             [sage_bin_path, sage_script_dir + 'solve_system_of_eqs.sage'] +
             [str(precision)] +
             [str(eq) for eq in eqs]
-<<<<<<< HEAD
-        ).decode("utf-8")
-=======
         ).decode('utf-8')
->>>>>>> stable_v3
     except (KeyboardInterrupt, SystemExit):
         raise
 
@@ -73,11 +69,7 @@ def solve_single_eq_single_var(
                 [sage_bin_path, sage_script_dir + 
                     'solve_single_eq_single_var.sage'] +
                 [str(precision), str(eq), var]
-<<<<<<< HEAD
-            ).decode("utf-8")
-=======
             ).decode('utf-8')
->>>>>>> stable_v3
         except (KeyboardInterrupt, SystemExit):
             raise
 
@@ -121,11 +113,7 @@ def compute_discriminant(f):
         disc_str = subprocess.check_output(
             [sage_bin_path, sage_script_dir + 'compute_discriminant.sage'] +
             [str(f)]
-<<<<<<< HEAD
-        ).decode("utf-8")
-=======
         ).decode('utf-8')
->>>>>>> stable_v3
     except (KeyboardInterrupt, SystemExit):
         raise
     disc_sym = sympify(disc_str)
