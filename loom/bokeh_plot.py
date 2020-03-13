@@ -237,11 +237,13 @@ def get_spectral_network_bokeh_plot(
         
     # prepare data sources for various objects to be plotted
     lines_ds = ColumnDataSource(
-        data={k: cds[k] for k in ['xs', 'ys', 'color'] if k in cds}
+        data={k: cds[k] for k in 
+              ['xs', 'ys', 'color', 'root', 'label'] if k in cds}
     )
     arrows_ds = ColumnDataSource(
         data={k: cds[k] for k in 
-              ['arrow_x', 'arrow_y', 'color', 'arrow_angle'] 
+              ['arrow_x', 'arrow_y', 'color', 'arrow_angle',
+              'root', 'label'] 
               if k in cds
              }
     )
@@ -251,14 +253,13 @@ def get_spectral_network_bokeh_plot(
     # draw lines
     bokeh_figure.multi_line(
         xs='xs', ys='ys', color='color', line_width=1.5, 
-        source=lines_ds,
+        alpha='root', source=lines_ds,
     )
 
     # draw arrows
     bokeh_figure.triangle(
-        x='arrow_x', y='arrow_y', color='color', 
-        angle='arrow_angle', size=8, 
-        source=arrows_ds,
+        x='arrow_x', y='arrow_y', color='color', alpha='root',
+        angle='arrow_angle', size=8, source=arrows_ds,
     )
 
     bokeh_obj = {}
@@ -287,8 +288,7 @@ def get_spectral_network_bokeh_plot(
     redraw_arrows_button = Button(
         label='Redraw arrows',
     )
-    redraw_arrows_button.js_on_event(
-        ButtonClick,
+    redraw_arrows_button.js_on_click(
         CustomJS(
             args={
                 'cds': cds,
