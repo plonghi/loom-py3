@@ -9,4 +9,10 @@ logs/webmain_pid
 cache/
 data/
 *.ipynb_checkpoints
+bin/
+static/html/
+static/loom_docs/
+static/loom_plots/
+.venv/
+.sage/
 
