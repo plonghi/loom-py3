@@ -284,50 +284,50 @@ def get_spectral_network_bokeh_plot(
         bokeh_figure.x_range.callback = range_callback
         bokeh_figure.y_range.callback = range_callback
 
-    # 'Redraw arrows' button.
-    redraw_arrows_button = Button(
-        label='Redraw arrows',
-    )
-    redraw_arrows_button.js_on_click(
-        CustomJS(
-            args={
-                'cds': cds,
-                'x_range': bokeh_figure.x_range,
-                'y_range': bokeh_figure.y_range
-            },
-            code=(custom_js_code + 'redraw_arrows(cds, x_range, y_range);'),
-        )
-    )
-    bokeh_obj['redraw_arrows_button'] = redraw_arrows_button
-    notebook_vform_elements.append(redraw_arrows_button)
+#     # 'Redraw arrows' button.
+#     redraw_arrows_button = Button(
+#         label='Redraw arrows',
+#     )
+#     redraw_arrows_button.js_on_click(
+#         CustomJS(
+#             args={
+#                 'cds': cds,
+#                 'x_range': bokeh_figure.x_range,
+#                 'y_range': bokeh_figure.y_range
+#             },
+#             code=(custom_js_code + 'redraw_arrows(cds, x_range, y_range);'),
+#         )
+#     )
+#     bokeh_obj['redraw_arrows_button'] = redraw_arrows_button
+#     notebook_vform_elements.append(redraw_arrows_button)
 
-    # 'Show data points' button
-    show_data_points_button = Button(
-        label='Show data points',
-    )
-    show_data_points_button.js_on_event(
-        ButtonClick,
-        CustomJS(
-            args={'cds': cds, 'dpds': dpds, 'hover': hover},
-            code=(custom_js_code + 'show_data_points(cds, dpds, hover);'),
-        )
-    )
-    bokeh_obj['show_data_points_button'] = show_data_points_button
-    notebook_vform_elements.append(show_data_points_button)
+#     # 'Show data points' button
+#     show_data_points_button = Button(
+#         label='Show data points',
+#     )
+#     show_data_points_button.js_on_event(
+#         ButtonClick,
+#         CustomJS(
+#             args={'cds': cds, 'dpds': dpds, 'hover': hover},
+#             code=(custom_js_code + 'show_data_points(cds, dpds, hover);'),
+#         )
+#     )
+#     bokeh_obj['show_data_points_button'] = show_data_points_button
+#     notebook_vform_elements.append(show_data_points_button)
 
-    # 'Hide data points' button
-    hide_data_points_button = Button(
-        label='Hide data points',
-    )
-    hide_data_points_button.js_on_event(
-        ButtonClick,
-        CustomJS(
-            args={'cds': cds, 'dpds': dpds, 'hover': hover},
-            code=(custom_js_code + 'hide_data_points(cds, dpds, hover);'),
-        )
-    )
-    bokeh_obj['hide_data_points_button'] = hide_data_points_button
-    notebook_vform_elements.append(hide_data_points_button)
+#     # 'Hide data points' button
+#     hide_data_points_button = Button(
+#         label='Hide data points',
+#     )
+#     hide_data_points_button.js_on_event(
+#         ButtonClick,
+#         CustomJS(
+#             args={'cds': cds, 'dpds': dpds, 'hover': hover},
+#             code=(custom_js_code + 'hide_data_points(cds, dpds, hover);'),
+#         )
+#     )
+#     bokeh_obj['hide_data_points_button'] = hide_data_points_button
+#     notebook_vform_elements.append(hide_data_points_button)
 
     # Prev/Next soliton tree button
     tree_idx_ds = ColumnDataSource({'j': ['0']})
