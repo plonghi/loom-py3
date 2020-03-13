@@ -13,6 +13,8 @@ from bokeh.models import (HoverTool, BoxZoomTool, PanTool, WheelZoomTool,
 from bokeh.models.widgets import Button
 # from bokeh.models.widgets import Toggle
 from bokeh.plotting import figure
+from bokeh.events import ButtonClick
+from bokeh.layouts import column
 
 from misc import get_splits_with_overlap
 
@@ -399,7 +401,7 @@ def get_spectral_network_bokeh_plot(
 
     if notebook is True:
         # TODO: Include phase text input
-        return vform(*notebook_vform_elements, width=plot_width)
+        return column(*notebook_vform_elements)
     elif slide is True:
         return plot
     else:

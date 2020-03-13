@@ -860,7 +860,7 @@ def get_loom_dir():
 def get_current_branch_version():
     version = subprocess.check_output(
         ['git', '-C', get_loom_dir(), 'rev-parse', 'HEAD']
-    )
+    ).decode("utf-8")
 
     return version
 
