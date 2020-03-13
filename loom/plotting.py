@@ -426,15 +426,15 @@ def get_legend(
 ):
     root_dictionary = make_root_dictionary(g_data)
     weight_dictionary = make_weight_dictionary(g_data)
-    root_labels = root_dictionary.keys()
-    roots = root_dictionary.values()
+    root_labels = list(root_dictionary.keys())
+    roots = [root_dictionary[k] for k in root_labels]
     weight_pairs = [
         [str('(mu_' + str(p[0]) + ', mu_' + str(p[1]) + ')')
          for p in g_data.ordered_weight_pairs(rt)]
         for rt in roots
     ]
-    weight_labels = weight_dictionary.keys()
-    weights = weight_dictionary.values()
+    weight_labels = list(weight_dictionary.keys())
+    weights = [weight_dictionary[k] for k in weight_labels]
 
     legend = ('\t--- Root System ---\n')
     for i in range(len(roots)):
