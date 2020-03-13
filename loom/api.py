@@ -14,15 +14,15 @@ from logging.handlers import RotatingFileHandler
 from matplotlib import pyplot
 from sympy import oo
 
-from logutils_queue import QueueHandler
-from config import LoomConfig
-from trivialization import SWDataWithTrivialization
-from spectral_network import SpectralNetwork
-from parallel import parallel_get_spectral_network
+from logutils.queue import QueueHandler
+from loom.config import LoomConfig
+from loom.trivialization import SWDataWithTrivialization
+from loom.spectral_network import SpectralNetwork
+from loom.parallel import parallel_get_spectral_network
 # TODO: plotting.py will be deprecated; use plot_ui.py
-from plotting import NetworkPlot, NetworkPlotTk
-from misc import get_phases_from_dict
-from misc import get_phase_dict
+from loom.plotting import NetworkPlot, NetworkPlotTk
+from loom.misc import get_phases_from_dict
+from loom.misc import get_phase_dict
 
 
 class SpectralNetworkData:

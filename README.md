@@ -17,9 +17,7 @@ A framework to generate and analyze spectral networks, including a GUI based on 
 * Plot spectral networks with interactive labeling.
 
 In addition, ``loom`` contains a web frontend that drives a WSGI application, which can be loaded from any web server that supports WSGI applications, including Apache. To see how the WSGI application looks like, visit
-* http://het-math2.physics.rutgers.edu/loom/ (stable)
-* http://chan.physics.rutgers.edu/loom/ (developmental, alpha version)
-* http://het-math2.physics.rutgers.edu/dev_loom/ (developmental, beta version)
+* https://loom.ethz.ch/
 
 ### Note for users and developers
 ``stable_*`` is the branch to use for the study of spectral networks, ``master`` is a developmental branch that may contain up-to-date but unstable features.

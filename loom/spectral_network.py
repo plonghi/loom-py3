@@ -10,17 +10,17 @@ import json
 
 from cmath import exp
 from scipy import integrate
-from s_wall import (
+from loom.s_wall import (
     SWall, Joint, get_s_wall_seeds, MIN_NUM_OF_DATA_PTS,
 )
-from misc import (
+from loom.misc import (
     n_nearest_indices, get_turning_points, get_splits_with_overlap,
     get_descendant_roots, sort_roots, NpEncoder
 )
-from intersection import (
+from loom.intersection import (
     NoIntersection, find_intersection_of_segments,
 )
-from trivialization import BranchPoint
+from loom.trivialization import BranchPoint
 
 
 class Street(SWall):

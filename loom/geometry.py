@@ -12,9 +12,9 @@ from itertools import combinations
 from cmath import phase, pi
 from matplotlib import cm as mpl_color_map
 
-import sage_subprocess
-from spectral_curve import get_ffr_curve_string
-from misc import (ctor2, r2toc, PSL2C,
+import loom.sage_subprocess as sage_subprocess
+from loom.spectral_curve import get_ffr_curve_string
+from loom.misc import (ctor2, r2toc, PSL2C,
                   delete_duplicates, gather, parse_sym_dict_str,
                   n_remove_duplicate, spread_of_branch_points)
 

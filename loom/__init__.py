@@ -26,13 +26,13 @@ matplotlib.rcParams['savefig.bbox'] = 'tight'
 matplotlib.rcParams['savefig.pad_inches'] = 0.0
 # matplotlib.rcParams['text.usetex'] = True
 
-from api import get_loom_dir
-from api import set_logging
-from api import generate_spectral_network as generate
-from api import load_spectral_network as load
-from api import save_spectral_network as save
-from api import make_spectral_network_plot as plot
-from api import load_config, save_config
+from loom.api import get_loom_dir
+from loom.api import set_logging
+from loom.api import generate_spectral_network as generate
+from loom.api import load_spectral_network as load
+from loom.api import save_spectral_network as save
+from loom.api import make_spectral_network_plot as plot
+from loom.api import load_config, save_config
 
 LOGGING_FILE_PATH = os.path.join(
     get_loom_dir(),

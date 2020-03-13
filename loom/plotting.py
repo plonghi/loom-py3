@@ -6,16 +6,16 @@ import tkinter as tk
 
 import matplotlib
 from matplotlib.backends.backend_tkagg import (
-    FigureCanvasTkAgg as FigureCanvas,
-    NavigationToolbar2TkAgg as NavigationToolbar,
+    FigureCanvasTk as FigureCanvas,
+    NavigationToolbar2Tk as NavigationToolbar,
 )
 from matplotlib.widgets import Button
 from matplotlib import pyplot
 from math import pi
 from sympy import oo
 
-from network_plot import NetworkPlotBase
-from misc import put_on_cylinder, get_splits_with_overlap
+from loom.network_plot import NetworkPlotBase
+from loom.misc import put_on_cylinder, get_splits_with_overlap
 
 
 class SpectralNetworkPlotBase(NetworkPlotBase):

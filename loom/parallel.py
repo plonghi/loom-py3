@@ -3,7 +3,7 @@ import multiprocessing
 import logging
 import os
 
-from spectral_network import SpectralNetwork
+from loom.spectral_network import SpectralNetwork
 
 
 def child_sigint_handler(signum, frame):

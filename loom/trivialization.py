@@ -9,8 +9,8 @@ from itertools import combinations
 from pprint import pprint
 from heapq import nsmallest
 
-from geometry import SWDataBase
-from misc import (
+from loom.geometry import SWDataBase
+from loom.misc import (
     n_remove_duplicate, ctor2, r2toc, delete_duplicates, is_weyl_monodromy
 )
 

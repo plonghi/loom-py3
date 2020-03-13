@@ -8,12 +8,12 @@ from math import floor
 from scipy import interpolate
 from sympy import oo
 
-from geometry import (
+from loom.geometry import (
     find_xs_at_z_0, align_sheets_for_e_6_ffr, SHEET_NULL_TOLERANCE
 )
-from trivialization import BranchPoint
+from loom.trivialization import BranchPoint
 
-from misc import (
+from loom.misc import (
     cpow, remove_duplicate, ctor2, r2toc, delete_duplicates, is_root,
     get_descendant_roots, sort_roots, n_nearest
 )
