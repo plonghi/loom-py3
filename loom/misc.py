@@ -362,7 +362,7 @@ def get_turning_points(zs):
 
 def get_splits_with_overlap(splits):
     """
-    Get the start & the end indicies of a list according to the splits.
+    Get the start & the end indices of a list according to the splits.
 
     When the given split is [i_0, i_1, ...], this returns
     [
@@ -382,7 +382,8 @@ def get_splits_with_overlap(splits):
 
 
 def get_data_size_of(obj, debug=False):
-    if isinstance(obj, types.InstanceType) or 'loom' in str(type(obj)):
+    instance_type = getattr(types, 'InstanceType', object)
+    if isinstance(obj, instance_type) or 'loom' in str(type(obj)):
         data_size = 0
         try:
             for attr_name in obj.data_attributes:

@@ -281,8 +281,8 @@ def get_spectral_network_bokeh_plot(
             },
             code=(custom_js_code + 'update_plot_range(x_range, y_range);'),
         )
-        bokeh_figure.x_range.callback = range_callback
-        bokeh_figure.y_range.callback = range_callback
+        bokeh_figure.x_range.js_on_change('start', range_callback)
+        bokeh_figure.y_range.js_on_change('start', range_callback)
 
 #     # 'Redraw arrows' button.
 #     redraw_arrows_button = Button(

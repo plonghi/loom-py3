@@ -126,7 +126,7 @@ class LoomDB(object):
                 self.delete_queue(result_queues, process_uuid)
 
         # Received a stop event; finish all the processes.
-        process_uuids = self.loom_processes.keys()
+        process_uuids = list(self.loom_processes.keys())
         for process_uuid in process_uuids:
             logger.info('Finishing process {}...'.format(process_uuid))
             self.finish_loom_process(process_uuid, join_timeout=0)
@@ -173,7 +173,7 @@ class LoomDB(object):
             maxsize = self.result_queues_maxsize
             if (maxsize > 0 and len(result_queues) >= maxsize):
                 oldest_process_uuid = min(
-                    result_queues.keys(), key=result_queues.get
+                    list(result_queues.keys()), key=result_queues.get
                 )
                 logger.info(
                     'Deleting the oldest result_queue {}...'
