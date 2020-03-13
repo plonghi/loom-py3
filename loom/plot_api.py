@@ -9,7 +9,7 @@ from math import pi
 from sympy import oo
 from matplotlib.backends.backend_agg import FigureCanvas
 
-from misc import put_on_cylinder, get_splits_with_overlap
+from loom.misc import put_on_cylinder, get_splits_with_overlap
 
 class NetworkPlot(object):
     def __init__(self, matplotlib_figure=None, plot_range=None,):

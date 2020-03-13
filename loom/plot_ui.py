@@ -11,7 +11,7 @@ from matplotlib import pyplot
 
 import mpldatacursor
 
-from plot_api import SpectralNetworkPlot
+from loom.plot_api import SpectralNetworkPlot
 
 class SpectralNetworkPlotUIBase(SpectralNetworkPlot):
     def __init__(self, matplotlib_figure=None, plot_range=None,):

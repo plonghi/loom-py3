@@ -16,7 +16,7 @@ from bokeh.plotting import figure
 from bokeh.events import ButtonClick
 from bokeh.layouts import column
 
-from misc import get_splits_with_overlap
+from loom.misc import get_splits_with_overlap
 
 
 def get_spectral_network_bokeh_plot(

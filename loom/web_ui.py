@@ -14,13 +14,13 @@ from cmath import pi
 
 from numpy import inf
 
-from api import (
+from loom.api import (
     SpectralNetworkData,
     get_loom_dir,
 #    get_logging_handler,
     set_logging,
 )
-from web_api import(
+from loom.web_api import(
     WEB_APP_NAME,
     STAT_LOGGER_NAME,
     DEFAULT_NUM_PROCESSES,
@@ -32,10 +32,10 @@ from web_api import(
     get_data_file_path_list,
 
 )
-from config import LoomConfig
-from bokeh_plot import get_spectral_network_bokeh_plot
+from loom.config import LoomConfig
+from loom.bokeh_plot import get_spectral_network_bokeh_plot
 #from plotting import get_legend
-from plot_api import get_sw_data_legend, SolitonTreePlot
+from loom.plot_api import get_sw_data_legend, SolitonTreePlot
 
 # Flask configuration
 DEBUG = True

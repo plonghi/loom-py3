@@ -14,14 +14,14 @@ from io import StringIO
 
 from queue import Empty as QueueEmpty
 
-from api import (
+from loom.api import (
     SpectralNetworkData,
     get_loom_dir,
     get_logging_handler,
     set_logging,
 )
-from config import LoomConfig
-from misc import (
+from loom.config import LoomConfig
+from loom.misc import (
     get_phases_from_dict,
     get_phase_dict,
     get_data_size_of,
