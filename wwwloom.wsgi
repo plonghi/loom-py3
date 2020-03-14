@@ -15,7 +15,6 @@ if '_mod_wsgi_' in __name__:
     f = open(os.devnull, 'w')
     sys.stdout = f
     print('stdout redirecting failed if this message is shown.')
-
 sys.path.insert(0, BASEDIR + '/loom')
 
 from loom.api import get_loom_dir

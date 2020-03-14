@@ -15,4 +15,5 @@ static/loom_docs/
 static/loom_plots/
 .venv/
 .sage/
+nohup.out
 

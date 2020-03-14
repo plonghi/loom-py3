@@ -799,7 +799,7 @@ def render_plot_template(
         show_sn_slider = True
     else:
         show_sn_slider = False
-
+    
     return flask.render_template(
         'plot.html',
         bokeh_plot_script=bokeh_plot_script,
