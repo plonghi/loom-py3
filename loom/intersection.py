@@ -102,6 +102,10 @@ def find_intersection_of_segments(segment_1, segment_2, accuracy=1e-1,
         due to many cases when there is no intersection but
         the module keeps trying to find one.
     """
+    # First ccheck if either of the segments is empty
+    if (segment_1[0].size==0 or segment_1[1].size==0 or
+        segment_2[0].size==0 or segment_2[1].size==0):
+        raise NoIntersection()
     # First check if the two segments share any x- and y-range.
     x_range, y_range = find_curve_range_intersection(
         segment_1, segment_2, cut_at_inflection=True

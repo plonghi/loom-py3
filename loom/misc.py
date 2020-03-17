@@ -294,7 +294,7 @@ def sort_roots(roots, g_data):
     assuming no repetition in roots, and assuming
     all the roots are either positive or negative.
     """
-    root_indices = range(len(roots))
+    root_indices = list(range(len(roots)))
     sorted_roots = []
     for g_data_root in g_data.positive_roots:
         found = False
