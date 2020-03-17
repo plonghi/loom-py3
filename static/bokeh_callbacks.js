@@ -27,7 +27,7 @@ function sn_slider(
     plot_options_ds, tree_idx_ds
 ) {
     var cd = cds.get('data');
-    var snd = snds.get('data');
+    var snd = snds//.get('data');
     var dpd = dpds.get('data');
     var pd = pds.get('data');
     var current_sn_idx = sn_idx_ds.get('data');
@@ -59,6 +59,20 @@ function sn_slider(
     if (notebook == 'false') {
         document.getElementById("phase").innerHTML = pd['phase'][sn_idx];
     }
+    ////
+
+    // current_sn_idx['i'] = sn_idx;
+    // for (var key in cd) {
+    //     if (cd.hasOwnProperty(key)) {
+    //         cd[key] = snd['spectral_networks'][sn_idx][0][key];
+    //     }
+    // }
+    // cds.trigger('change');
+    // sn_idx_ds.trigger('change');
+    // // hide_data_points(cds, dpds, hover);
+    // // if (notebook == 'false') {
+    // //     document.getElementById("phase").innerHTML = pd['phase'][sn_idx];
+    // // }
 }
 
 function change_soliton_tree(

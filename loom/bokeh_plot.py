@@ -8,6 +8,7 @@ from copy import deepcopy
 from sympy import oo
 # from bokeh.io import vform
 from bokeh.models import CustomJS, ColumnDataSource, Slider
+from bokeh.models import BoxSelectTool
 from bokeh.models import (HoverTool, BoxZoomTool, PanTool, WheelZoomTool,
                           ResetTool, SaveTool, TapTool,)
 from bokeh.models.widgets import Button
@@ -82,8 +83,9 @@ def get_spectral_network_bokeh_plot(
 
     # Prepare a bokeh Figure.
     bokeh_figure = figure(
-        tools=[ResetTool(), BoxZoomTool(), PanTool(), WheelZoomTool(),
-               SaveTool(), TapTool(), hover],
+        # tools=[ResetTool(), BoxZoomTool(), PanTool(), WheelZoomTool(),
+        #        SaveTool(), TapTool(), hover],
+        tools='pan,wheel_zoom,box_zoom,reset,save,hover,tap',
         plot_width=plot_width,
         plot_height=plot_height,
         title=None,
@@ -176,9 +178,12 @@ def get_spectral_network_bokeh_plot(
         pds.data['phase'].append(sn_phase)
 
     # Data source containing all the spectral networks
-    snds = ColumnDataSource({
+    # snds = ColumnDataSource({
+    #     'spectral_networks': [],
+    # })
+    snds = {
         'spectral_networks': [],
-    })
+    }
 
     if plot_two_way_streets is True:
         # snds['spectral_networks'] is a 2-dim array,
@@ -227,9 +232,11 @@ def get_spectral_network_bokeh_plot(
             sn_data = get_s_wall_plot_data(
                 sn.s_walls, sw_data, logger_name, sn.phase,
             )
-            snds.data['spectral_networks'].append(sn_data)
+            # snds.data['spectral_networks'].append(sn_data)
+            snds['spectral_networks'].append(sn_data)
 
-        init_data = snds.data['spectral_networks'][0]
+        # init_data = snds.data['spectral_networks'][0]
+        init_data = snds['spectral_networks'][0]
 
     # Initialization of the current plot data source.
     for key in cds.keys():
@@ -380,12 +387,16 @@ def get_spectral_network_bokeh_plot(
         notebook_vform_elements.append(next_soliton_tree_button)
 
     # Slider
-    num_of_plots = len(snds.data['spectral_networks'])
+    # num_of_plots = len(snds.data['spectral_networks'])
+    num_of_plots = len(snds['spectral_networks'])
     if num_of_plots > 1:
         sn_slider = Slider(
             start=0, end=num_of_plots - 1,
             value=0, step=1, title="spectral network #"
         )
+
+        # print('snds\n{}\n{}'.format(snds.data, type(snds)))
+        # print('snds\n{}\n{}'.format(snds, type(snds)))
 
         sn_slider.js_on_change(
             'value',
@@ -414,7 +425,7 @@ def get_spectral_network_bokeh_plot(
 
     bokeh_obj['plot'] = plot
     
-    toolbar.active_scroll = plot.select_one(WheelZoomTool)
+    # bokeh_figure.toolbar.active_scroll = plot.select_one(WheelZoomTool)
     # bokeh_figure.toolbar.active_scroll = 'auto'
 
     if notebook is True:
