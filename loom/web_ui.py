@@ -165,7 +165,14 @@ def config(n_processes=None):
                 loom_config = get_loom_config()
             else:
                 loom_config = LoomConfig(logger_name=get_logger_name())
-                loom_config.read(uploaded_config_file)
+                file_path = 'config/' + uploaded_config_file.filename 
+                logger = logging.getLogger(get_logger_name())
+                logger.info('Loading configuration from {}...'
+                    .format(file_path))
+                with open(file_path, 'r') as fp:
+                    loom_config.read(fp)
+                logger.info('Finished loading configuration from {}.'
+                            .format(file_path))
         elif data_name is not None:
             config_file_path = os.path.join(
                 get_loom_dir(),
