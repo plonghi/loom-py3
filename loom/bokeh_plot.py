@@ -414,7 +414,8 @@ def get_spectral_network_bokeh_plot(
 
     bokeh_obj['plot'] = plot
     
-    plot.toolbar.active_scroll = plot.select_one(WheelZoomTool)
+    toolbar.active_scroll = plot.select_one(WheelZoomTool)
+    # bokeh_figure.toolbar.active_scroll = 'auto'
 
     if notebook is True:
         # TODO: Include phase text input

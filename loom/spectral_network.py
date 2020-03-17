@@ -1045,11 +1045,12 @@ def get_joint_data(descendant_roots, z, sw_data):
     for root in descendant_roots:
         # FIXME: The following, including self.ode_xs, can be removed
         # once the seeding of an S-wall is done by using a root.
-        ffr_xs_at_z = sw_data.get_sheets_at_z(z, ffr=True).values()
+        ffr_xs_at_z = sw_data.get_sheets_at_z(z, ffr=True)
         ffr_new_wall_weight_pairs = (
             sw_data.g_data.ordered_weight_pairs(root, ffr=True)
         )
         ffr_w_p_0 = ffr_new_wall_weight_pairs[0]
+
         ode_x1 = ffr_xs_at_z[ffr_w_p_0[0]]
         ode_x2 = ffr_xs_at_z[ffr_w_p_0[1]]
         ode_xs = [ode_x1, ode_x2]
