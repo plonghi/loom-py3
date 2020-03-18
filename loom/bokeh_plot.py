@@ -178,9 +178,11 @@ def get_spectral_network_bokeh_plot(
         pds.data['phase'].append(sn_phase)
 
     # Data source containing all the spectral networks
-    snds = ColumnDataSource({
-        'spectral_networks': [],
-    })
+    # snds = ColumnDataSource({
+    #     'spectral_networks': [],
+    # })
+    # XXX: changes this type of data because of problems with slider 
+    snds = []
 
     if plot_two_way_streets is True:
         # snds['spectral_networks'] is a 2-dim array,
@@ -211,9 +213,11 @@ def get_spectral_network_bokeh_plot(
                             data_entry[0][key] += tree_data[key]
                     data_entry.append(tree_data)
 
-            snds.data['spectral_networks'].append(data_entry)
+            # snds.data['spectral_networks'].append(data_entry)
+            snds.append(data_entry)
 
-        init_data = snds.data['spectral_networks'][0][0]
+        # init_data = snds.data['spectral_networks'][0][0]
+        init_data = snds[0][0]
     else:
         # snds['spectral_networks'] is a 1-dim array,
         # of spectral network data.
@@ -229,24 +233,28 @@ def get_spectral_network_bokeh_plot(
             sn_data = get_s_wall_plot_data(
                 sn.s_walls, sw_data, logger_name, sn.phase,
             )
-            snds.data['spectral_networks'].append(sn_data)
+            # snds.data['spectral_networks'].append(sn_data)
+            snds.append(sn_data)
 
-        init_data = snds.data['spectral_networks'][0]
+        # init_data = snds.data['spectral_networks'][0]
+        init_data = snds[0]
 
     # Initialization of the current plot data source.
-    for key in cds.data.keys():
+    for key in list(cds.data.keys()):
         cds.data[key] = init_data[key]
         
     # prepare data sources for various objects to be plotted
     lines_ds = ColumnDataSource(
         data={k: cds.data[k] for k in 
-              ['xs', 'ys', 'color', 'root', 'label'] if k in cds.data.keys()}
+              ['xs', 'ys', 'color', 'root', 'label'] 
+              if k in list(cds.data.keys())
+              }
     )
     arrows_ds = ColumnDataSource(
         data={k: cds.data[k] for k in 
               ['arrow_x', 'arrow_y', 'color', 'arrow_angle',
               'root', 'label'] 
-              if k in cds.data.keys()
+              if k in list(cds.data.keys())
              }
     )
 
@@ -382,33 +390,72 @@ def get_spectral_network_bokeh_plot(
         notebook_vform_elements.append(next_soliton_tree_button)
 
     # Slider
-    num_of_plots = len(snds.data['spectral_networks'])
+    # num_of_plots = len(snds.data['spectral_networks'])
+    num_of_plots = len(snds)
     if num_of_plots > 1:
         sn_slider = Slider(
             start=0, end=num_of_plots - 1,
             value=0, step=1, title="spectral network #"
         )
 
-        print('cds\n{}'.format(cds))
-        sn_slider.js_on_change(
-            'value',
-            CustomJS(
-                args={
-                    'cds': cds, 'snds': snds, 'sn_idx_ds': sn_idx_ds,
+        slider_callback = CustomJS(
+            args={
+                    'cds': cds, 'snds': snds, 
+                    'sn_idx_ds': sn_idx_ds,
                     'dpds': dpds, 'pds': pds, 'hover': hover,
-                    'plot_options': plot_options_ds, 'tree_idx_ds': tree_idx_ds
+                    'plot_options_ds': plot_options_ds, 'tree_idx_ds': tree_idx_ds
                 },
-                code=('' #+
-                    # custom_js_code +
-                    # 'sn_slider(' +
-                    # # 'cb_obj, ' +
-                    # # 'cds, ' +
-                    # # 'snds, sn_idx_ds, dpds, pds, hover, '+
-                    # # 'plot_options, tree_idx_ds' +
-                    # ');'
-                ),
-            )
+            code="""
+            console.log('called the slider callback!')
+            var cd = cds['data'];
+            var snd = snds;   // Note: this is a list, not a ColumnDataSource
+            var dpd = dpds['data'];
+            var pd = pds['data'];
+            var current_sn_idx = sn_idx_ds['data'];
+            var sn_idx = cb_obj.value;
+            var plot_options = plot_options_ds['data'];
+            var notebook = plot_options['notebook'];
+
+            current_sn_idx['i'] = sn_idx;
+            for (var key in cd) {
+                if (cd.hasOwnProperty(key)) {
+                    cd[key] = snd[sn_idx][key];
+                }
+            }
+
+            console.log('new current data')
+            console.log(cd)
+
+            cds.change.emit()
+            // sn_idx_ds.trigger('change');
+            sn_idx_ds.change.emit()
+            // tree_idx_ds.trigger('change');
+            // tree_idx_ds.change.emit()
+            // hide_data_points(cds, dpds, hover);
+            if (notebook == 'false') {
+                document.getElementById("phase").innerHTML = pd['phase'][sn_idx];
+            }
+            """
         )
+        sn_slider.js_on_change('value', slider_callback)
+
+        # sn_slider.js_on_change(
+        #     'value',
+        #     CustomJS(
+        #         args={
+        #             'cds': cds, 'snds': snds, 'sn_idx_ds': sn_idx_ds,
+        #             'dpds': dpds, 'pds': pds, 'hover': hover,
+        #             'plot_options_ds': plot_options_ds, 'tree_idx_ds': tree_idx_ds
+        #         },
+        #         code=(custom_js_code +
+        #             'sn_slider(' +
+        #             'cb_obj ' +
+        #             'cds, ' +
+        #             'snds, sn_idx_ds, dpds, pds, hover, '+
+        #             'plot_options, tree_idx_ds);'
+        #         ),
+        #     )
+        # )
         plot = column(bokeh_figure, sn_slider)
         notebook_vform_elements = (
             [bokeh_figure, sn_slider] + notebook_vform_elements

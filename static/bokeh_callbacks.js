@@ -22,12 +22,12 @@ function hide_data_points(cds, dpds, hover) {
     dpds.trigger('change');
 }
 
-function sn_slider(
-    // cb_obj, 
-    // cds, 
-    // snds, sn_idx_ds, dpds, pds, hover,
-    // plot_options_ds, tree_idx_ds
+function sn_slider(cb_obj, cds, 
+    snds, sn_idx_ds, dpds, pds, hover,
+    plot_options_ds, tree_idx_ds
 ) {
+    console.log('printing some of the variables:')
+    console.log(cd_obj)
     // var cd = cds['data'];
     // var snd = snds['data'];
     // var dpd = dpds['data'];
