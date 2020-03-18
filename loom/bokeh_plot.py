@@ -389,20 +389,23 @@ def get_spectral_network_bokeh_plot(
             value=0, step=1, title="spectral network #"
         )
 
+        print('cds\n{}'.format(cds))
         sn_slider.js_on_change(
             'value',
             CustomJS(
                 args={
-                    # 'cds': cds, 'snds': snds, 'sn_idx_ds': sn_idx_ds,
-                    # 'dpds': dpds, 'pds': pds, 'hover': hover,
-                    # 'plot_options': plot_options_ds, 'tree_idx_ds': tree_idx_ds
+                    'cds': cds, 'snds': snds, 'sn_idx_ds': sn_idx_ds,
+                    'dpds': dpds, 'pds': pds, 'hover': hover,
+                    'plot_options': plot_options_ds, 'tree_idx_ds': tree_idx_ds
                 },
-                code=(
-                    custom_js_code #+
+                code=('' #+
+                    # custom_js_code +
                     # 'sn_slider(' +
-                    # 'cb_obj, ' +
-                    # 'cds, snds, sn_idx_ds, dpds, pds, hover, '+
-                    # 'plot_options, tree_idx_ds);'
+                    # # 'cb_obj, ' +
+                    # # 'cds, ' +
+                    # # 'snds, sn_idx_ds, dpds, pds, hover, '+
+                    # # 'plot_options, tree_idx_ds' +
+                    # ');'
                 ),
             )
         )

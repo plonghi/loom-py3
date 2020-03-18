@@ -23,8 +23,10 @@ function hide_data_points(cds, dpds, hover) {
 }
 
 function sn_slider(
-    cb_obj, cds, snds, sn_idx_ds, dpds, pds, hover,
-    plot_options_ds, tree_idx_ds
+    // cb_obj, 
+    // cds, 
+    // snds, sn_idx_ds, dpds, pds, hover,
+    // plot_options_ds, tree_idx_ds
 ) {
     // var cd = cds['data'];
     // var snd = snds['data'];
@@ -35,7 +37,7 @@ function sn_slider(
     // var plot_options = plot_options_ds['data'];
     // var notebook = plot_options['notebook'];
     // var show_trees = plot_options['show_trees'];
-    var show_trees = 'false'
+    // var show_trees = 'false'
     // var tree_idx = tree_idx_ds['data'];
     
     // current_sn_idx['i'] = sn_idx;
@@ -63,7 +65,7 @@ function sn_slider(
     // if (notebook == 'false') {
     //     document.getElementById("phase").innerHTML = pd['phase'][sn_idx];
     // }
-    
+
     ///////
 
     // current_sn_idx['i'] = sn_idx;
