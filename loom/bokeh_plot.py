@@ -151,7 +151,7 @@ def get_spectral_network_bokeh_plot(
     )
 
     # Data source for the current plot
-    cds = {
+    cds = ColumnDataSource({
         'ranges': [],
         'color': [],
         'arrow_x': [],
@@ -161,7 +161,7 @@ def get_spectral_network_bokeh_plot(
         'root': [],
         'xs': [],
         'ys': []
-    }
+    })
 
     # Data source for plotting data points
     dpds = ColumnDataSource({
@@ -239,19 +239,19 @@ def get_spectral_network_bokeh_plot(
         init_data = snds['spectral_networks'][0]
 
     # Initialization of the current plot data source.
-    for key in cds.keys():
-        cds[key] = init_data[key]
+    for key in cds.data.keys():
+        cds.data[key] = init_data[key]
         
     # prepare data sources for various objects to be plotted
     lines_ds = ColumnDataSource(
-        data={k: cds[k] for k in 
-              ['xs', 'ys', 'color', 'root', 'label'] if k in cds}
+        data={k: cds.data[k] for k in 
+              ['xs', 'ys', 'color', 'root', 'label'] if k in cds.data.keys()}
     )
     arrows_ds = ColumnDataSource(
-        data={k: cds[k] for k in 
+        data={k: cds.data[k] for k in 
               ['arrow_x', 'arrow_y', 'color', 'arrow_angle',
               'root', 'label'] 
-              if k in cds
+              if k in cds.data.keys()
              }
     )
 
@@ -389,14 +389,14 @@ def get_spectral_network_bokeh_plot(
     # Slider
     # num_of_plots = len(snds.data['spectral_networks'])
     num_of_plots = len(snds['spectral_networks'])
+    # print('tree_idx_ds = {}'.format(tree_idx_ds))
     if num_of_plots > 1:
         sn_slider = Slider(
             start=0, end=num_of_plots - 1,
             value=0, step=1, title="spectral network #"
         )
 
-        # print('snds\n{}\n{}'.format(snds.data, type(snds)))
-        # print('snds\n{}\n{}'.format(snds, type(snds)))
+        # print('cds\n{}\n{}'.format(cds.data, type(cds)))
 
         sn_slider.js_on_change(
             'value',
@@ -408,7 +408,9 @@ def get_spectral_network_bokeh_plot(
                 },
                 code=(
                     custom_js_code +
-                    'sn_slider(cb_obj, cds, snds, sn_idx_ds, dpds, pds, hover, '
+                    'sn_slider(' +
+                    'cb_obj, ' +
+                    'cds, snds, sn_idx_ds, dpds, pds, hover, '+
                     'plot_options, tree_idx_ds);'
                 ),
             )
