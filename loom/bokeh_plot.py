@@ -178,12 +178,9 @@ def get_spectral_network_bokeh_plot(
         pds.data['phase'].append(sn_phase)
 
     # Data source containing all the spectral networks
-    # snds = ColumnDataSource({
-    #     'spectral_networks': [],
-    # })
-    snds = {
+    snds = ColumnDataSource({
         'spectral_networks': [],
-    }
+    })
 
     if plot_two_way_streets is True:
         # snds['spectral_networks'] is a 2-dim array,
@@ -232,11 +229,9 @@ def get_spectral_network_bokeh_plot(
             sn_data = get_s_wall_plot_data(
                 sn.s_walls, sw_data, logger_name, sn.phase,
             )
-            # snds.data['spectral_networks'].append(sn_data)
-            snds['spectral_networks'].append(sn_data)
+            snds.data['spectral_networks'].append(sn_data)
 
-        # init_data = snds.data['spectral_networks'][0]
-        init_data = snds['spectral_networks'][0]
+        init_data = snds.data['spectral_networks'][0]
 
     # Initialization of the current plot data source.
     for key in cds.data.keys():
@@ -387,31 +382,27 @@ def get_spectral_network_bokeh_plot(
         notebook_vform_elements.append(next_soliton_tree_button)
 
     # Slider
-    # num_of_plots = len(snds.data['spectral_networks'])
-    num_of_plots = len(snds['spectral_networks'])
-    # print('tree_idx_ds = {}'.format(tree_idx_ds))
+    num_of_plots = len(snds.data['spectral_networks'])
     if num_of_plots > 1:
         sn_slider = Slider(
             start=0, end=num_of_plots - 1,
             value=0, step=1, title="spectral network #"
         )
 
-        # print('cds\n{}\n{}'.format(cds.data, type(cds)))
-
         sn_slider.js_on_change(
             'value',
             CustomJS(
                 args={
-                    'cds': cds, 'snds': snds, 'sn_idx_ds': sn_idx_ds,
-                    'dpds': dpds, 'pds': pds, 'hover': hover,
-                    'plot_options': plot_options_ds, 'tree_idx_ds': tree_idx_ds
+                    # 'cds': cds, 'snds': snds, 'sn_idx_ds': sn_idx_ds,
+                    # 'dpds': dpds, 'pds': pds, 'hover': hover,
+                    # 'plot_options': plot_options_ds, 'tree_idx_ds': tree_idx_ds
                 },
                 code=(
-                    custom_js_code +
-                    'sn_slider(' +
-                    'cb_obj, ' +
-                    'cds, snds, sn_idx_ds, dpds, pds, hover, '+
-                    'plot_options, tree_idx_ds);'
+                    custom_js_code #+
+                    # 'sn_slider(' +
+                    # 'cb_obj, ' +
+                    # 'cds, snds, sn_idx_ds, dpds, pds, hover, '+
+                    # 'plot_options, tree_idx_ds);'
                 ),
             )
         )

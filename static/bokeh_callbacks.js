@@ -26,40 +26,45 @@ function sn_slider(
     cb_obj, cds, snds, sn_idx_ds, dpds, pds, hover,
     plot_options_ds, tree_idx_ds
 ) {
-    var cd = cds['data'];
-    var snd = snds['data'];
-    var dpd = dpds['data'];
-    var pd = pds['data'];
-    var current_sn_idx = sn_idx_ds['data'];
-    var sn_idx = cb_obj.value;
-    var plot_options = plot_options_ds['data'];
-    var notebook = plot_options['notebook'];
-    var show_trees = plot_options['show_trees'];
+    // var cd = cds['data'];
+    // var snd = snds['data'];
+    // var dpd = dpds['data'];
+    // var pd = pds['data'];
+    // var current_sn_idx = sn_idx_ds['data'];
+    // var sn_idx = cb_obj.value;
+    // var plot_options = plot_options_ds['data'];
+    // var notebook = plot_options['notebook'];
+    // var show_trees = plot_options['show_trees'];
+    var show_trees = 'false'
     // var tree_idx = tree_idx_ds['data'];
     
-    current_sn_idx['i'] = sn_idx;
-    // tree_idx['j'] = 0;
-    // if (show_trees == 'true') {
-    //     document.getElementById("current_tree_idx").innerHTML = 'All';
-    // }
+    // current_sn_idx['i'] = sn_idx;
+    // // tree_idx['j'] = 0;
+    // // if (show_trees == 'true') {
+    // //     document.getElementById("current_tree_idx").innerHTML = 'All';
+    // // }
 
-    for (var key in cd) {
-        if (cd.hasOwnProperty(key)) {
-            if (show_trees == 'false') {
-                cd[key] = snd['spectral_networks'][sn_idx][key];
-            } else {
-                cd[key] = snd['spectral_networks'][sn_idx][0][key];
-            }
-        }
-    }
-    cds.trigger('change');
-    sn_idx_ds.trigger('change');
-    // tree_idx_ds.trigger('change');
-    hide_data_points(cds, dpds, hover);
-    if (notebook == 'false') {
-        document.getElementById("phase").innerHTML = pd['phase'][sn_idx];
-    }
-    ////
+    // for (var key in cd) {
+    //     if (cd.hasOwnProperty(key)) {
+    //         if (show_trees == 'false') {
+    //             cd[key] = snd['spectral_networks'][sn_idx][key];
+    //         } else {
+    //             cd[key] = snd['spectral_networks'][sn_idx][0][key];
+    //         }
+    //     }
+    // }
+    // // cds.trigger('change');
+    // cds.change.emit()
+    // // sn_idx_ds.trigger('change');
+    // sn_idx_ds.change.emit()
+    // // tree_idx_ds.trigger('change');
+    // // tree_idx_ds.change.emit()
+    // hide_data_points(cds, dpds, hover);
+    // if (notebook == 'false') {
+    //     document.getElementById("phase").innerHTML = pd['phase'][sn_idx];
+    // }
+    
+    ///////
 
     // current_sn_idx['i'] = sn_idx;
     // for (var key in cd) {
