@@ -1,6 +1,6 @@
 function show_data_points(cds, dpds, hover) {
-    var cd = cds.get('data');
-    var dpd = dpds.get('data');
+    var cd = cds.data;
+    var dpd = dpds.data;
     dpd['x'] = [];
     dpd['y'] = [];
 
@@ -9,17 +9,19 @@ function show_data_points(cds, dpds, hover) {
         dpd['y'] = dpd['y'].concat(cd['ys'][i]);
     }
     hover.attributes.tooltips = null;
-    dpds.trigger('change');
+    // dpds.trigger('change');
+    dpds.change.emit();
 }
 
 function hide_data_points(cds, dpds, hover) {
-    var cd = cds.get('data');
-    var dpd = dpds.get('data');
+    var cd = cds.data;
+    var dpd = dpds.data;
     dpd['x'] = [];
     dpd['y'] = [];
 
     hover.attributes.tooltips = [['name', '@label'], ['root', '@root']];
-    dpds.trigger('change');
+    // dpds.trigger('change');
+    dpds.change.emit();
 }
 
 function sn_slider(cb_obj, cds, 
@@ -33,7 +35,7 @@ function sn_slider(cb_obj, cds,
     // var current_sn_idx = sn_idx_ds['data'];
     var sn_idx = cb_obj.value;
     // var plot_options = plot_options_ds['data'];
-    // var notebook = plot_options_ds['notebook'];
+    var notebook = plot_options_ds.data['notebook'];
     var show_trees = plot_options_ds['show_trees'];
     // var show_trees = 'false'
     // var tree_idx = tree_idx_ds['data'];
@@ -84,11 +86,11 @@ function sn_slider(cb_obj, cds,
 function change_soliton_tree(
     cds, snds, sn_idx_ds, tree_idx_ds, plot_options_ds, change
 ) {
-    var cd = cds.get('data');
-    var snd = snds.get('data');
-    var sn_idx = sn_idx_ds.get('data');
-    var tree_idx = tree_idx_ds.get('data');
-    var plot_options = plot_options_ds.get('data');
+    var cd = cds.data;
+    var snd = snds.data;
+    var sn_idx = sn_idx_ds.data;
+    var tree_idx = tree_idx_ds.data;
+    var plot_options = plot_options_ds.data;
     var notebook = plot_options['notebook'];
     var show_trees = plot_options['show_trees'];
 
@@ -138,7 +140,7 @@ function show_next_soliton_tree(
 }
 
 function redraw_arrows(cds, x_range, y_range) {
-    var cd = cds.get('data');
+    var cd = cds.data;
     var x_s = x_range.get('start');
     var x_e = x_range.get('end');
     var y_s = y_range.get('start');
