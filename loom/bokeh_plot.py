@@ -425,8 +425,6 @@ def get_spectral_network_bokeh_plot(
             
             for (var key in cds.data) {
                 if (cds.data.hasOwnProperty(key)) {
-                    console.log('updating cds.data[key] with key')
-                    console.log(key)
                     if (show_trees == 'false') {
                         cds.data[key] = snds[sn_idx][key];
                     } else {
@@ -435,10 +433,22 @@ def get_spectral_network_bokeh_plot(
                 }
             }
 
-            for (var key in ['xs', 'ys', 'color', 'root', 'label'] ) {
+            var lines_ds_keys = ['xs', 'ys', 'color', 'root', 'label']
+            for (var i = 0; i < lines_ds_keys.length; i++) {
+                var key = lines_ds_keys[i]
+                console.log('updating key')
+                console.log(key)
                 if (cds.data.hasOwnProperty(key)) {
                     if (show_trees == 'false') {
+                        console.log('updating data in lines_ds for key')
+                        console.log(key)
                         lines_ds.data[key] = snds[sn_idx][key];
+                        if (key=='xs') {
+                            console.log('in particular lines_ds.data[xs][3][6] is')
+                            console.log(lines_ds.data['xs'][3][6])
+                            console.log('compare with')
+                            console.log(snds[sn_idx]['xs'][3][6] )
+                        }
                     } else {
                         lines_ds.data[key] = snds[sn_idx][0][key];
                     }
@@ -461,9 +471,6 @@ def get_spectral_network_bokeh_plot(
             arrows_ds.change.emit()
             lines_ds.change.emit()
 
-            console.log('lines_ds.data[xs][3][6] is now')
-            console.log(lines_ds.data['xs'][3][6])
-            
             hide_data_points(cds, dpds, hover);
             if (notebook == 'false') {
                 document.getElementById("phase").innerHTML = pd['phase'][sn_idx];
