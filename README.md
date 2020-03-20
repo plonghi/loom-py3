@@ -26,22 +26,20 @@ In addition, ``loom`` contains a web frontend that drives a WSGI application, wh
 
 #### Web UI
 ![config](https://github.com/plonghi/loom-py3/blob/ETH-server/screenshots/web_ui_config.png "configuration page")
-![progress](https://github.com/loom-py3/blob/ETH-server/screenshots/web_ui_progress.png "showing progress")
-![plot](https://github.com/loom-py3/blob/ETH-server/screenshots/web_ui_plot.png "plot page")
+![progress](https://github.com/plonghi/loom-py3/blob/ETH-server/screenshots/web_ui_progress.png "showing progress")
+![plot](https://github.com/plonghi/loom-py3/blob/ETH-server/screenshots/web_ui_plot.png "plot page")
 
 
 #### GUI
-![loom screenshot](https://github.com/plonghi/loom/blob/ETH-server/screeenshots/loom_desktop.png "loom desktop")
-![loom menu screenshot](https://github.com/plonghi/loom/blob/ETH-server/screeenshots/loom_menu.png "loom menu")
-![loom plot screenshot](https://github.com/plonghi/loom/blob/ETH-server/screeenshots/loom_plot.png "loom plot")
+![loom screenshot](https://github.com/plonghi/loom-py3/blob/ETH-server/screeenshots/loom_desktop.png "loom desktop")
+![loom menu screenshot](https://github.com/plonghi/loom-py3/blob/ETH-server/screeenshots/loom_menu.png "loom menu")
+![loom plot screenshot](https://github.com/plonghi/loom-py3/blob/ETH-server/screeenshots/loom_plot.png "loom plot")
 
 ## How to use ``loom`` web UI
 
 * The front page of the web UI of ``loom`` can be found at
-  * http://het-math2.physics.rutgers.edu/loom/ (stable)
-  * http://chan.physics.rutgers.edu/loom/ (developmental, alpha version)
-  * http://het-math2.physics.rutgers.edu/dev_loom/ (developmental, beta version)
-* In the following we will denote the root url as ``/``, that is, the full url of ``/config`` is http://het-math2.physics.rutgers.edu/dev_loom/config.
+  * http://loom.ethz.ch/ (stable)
+* In the following we will denote the root url as ``/``, that is, the full url of ``/config`` is http://loom.ethz.ch/config.
 
 ### Configuration page
 * Go to ``/config`` to set a configuration to run ``loom`` on the web.
@@ -105,11 +103,11 @@ where ``v_2`` and ``v_3`` are complex parameters whose numerical values are to b
 ## How to run ``loom``
 ``loom`` is expected to run on a Linux system. Although ``loom`` does not require any platform-specific library and therefore should run on any platform that runs Python 2.X in principle, it usually runs into a platform-specific problem when run on a platform other than Linux; for example, on Windows it has an issue with multiple processes, and on Mac it has an issue with TKinter GUI.
 
-To run ``loom``'s web frontend, the preparation is more involved. Please contact https://github.com/chan-y-park for the detail.
+To run ``loom``'s web frontend, the preparation is more involved. Please contact https://github.com/plonghi for the detail.
 
 To run ``loom``'s web frontend on Ubuntu 18.04, see [INSTALL.md](INSTALL.md).
 
-### Installation
+### Installation (warning: outdated)
 * The following instruction is based on Ubuntu 14.04 LTS.
 * Install Anaconda 2.3.0
   * https://store.continuum.io/cshop/anaconda/
@@ -126,7 +124,7 @@ To run ``loom``'s web frontend on Ubuntu 18.04, see [INSTALL.md](INSTALL.md).
   * Sometimes the port is occupied by another program. In such a case, run ``webmain.wsgi -p xxxx`` where ``xxxx`` is a port number, for example ``9999``. Then go to ``localhost:xxxx/config``.
   * When running a web UI and in the middle of a run ``loom`` crashes, there can still be a ``Python`` process running. You need to manually kill the process by first finding its ``pid`` using for example ``ps -aux`` and ``kill -9 xxxxx`` where ``xxxxx`` is the ``pid`` of the ``Python`` process.
   * Using ``pdb`` while running ``loom`` using the web UI is not recommended, as it usually won't work unless you carefully place ``pdb.set_trace()`` in an appropriate location. The reason is, as all UI frontends do, ``loom`` runs as a child process behind a parent process driving the ``UI``, and using ``pdb`` on ``loom`` only stops the ``loom`` process, which the parent process sees as the child not responding to itself.
-* The most debugging-friendly way and also the most convenient way of running ``loom`` for whom knows about ``Python`` is running it using ``IPython`` and ``Jupyter``. As an example, see [how_to_run_loom.ipynb](how_to_run_loom.ipynb) for the ``Python`` code and [how_to_run_loom.html](http://het-math2.physics.rutgers.edu/loom_docs/how_to_run_loom.html) how it looks like when it is run successfully.
+* The most debugging-friendly way and also the most convenient way of running ``loom`` for whom knows about ``Python`` is running it using ``IPython`` and ``Jupyter``. As an example, see [how_to_run_loom.ipynb](how_to_run_loom.ipynb) for the ``Python`` code.
 * ```gmain.py``` is an executable Python script that launches a GUI version of ```loom```.
 * In the Python interpreter import ```loom``` module.
 
