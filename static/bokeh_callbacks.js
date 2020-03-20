@@ -1,6 +1,6 @@
-function show_data_points(cds, dpds, hover) {
-    var cd = cds.data;
-    var dpd = dpds.data;
+function show_data_points(current_ds, data_pts_ds, hover) {
+    var cd = current_ds.data;
+    var dpd = data_pts_ds.data;
     dpd['x'] = [];
     dpd['y'] = [];
 
@@ -9,29 +9,29 @@ function show_data_points(cds, dpds, hover) {
         dpd['y'] = dpd['y'].concat(cd['ys'][i]);
     }
     hover.attributes.tooltips = null;
-    // dpds.trigger('change');
-    dpds.change.emit();
+    // data_pts_ds.trigger('change');
+    data_pts_ds.change.emit();
 }
 
-function hide_data_points(cds, dpds, hover) {
-    var cd = cds.data;
-    var dpd = dpds.data;
+function hide_data_points(current_ds, data_pts_ds, hover) {
+    var cd = current_ds.data;
+    var dpd = data_pts_ds.data;
     dpd['x'] = [];
     dpd['y'] = [];
 
     hover.attributes.tooltips = [['name', '@label'], ['root', '@root']];
-    // dpds.trigger('change');
-    dpds.change.emit();
+    // data_pts_ds.trigger('change');
+    data_pts_ds.change.emit();
 }
 
-// function sn_slider(cb_obj, cds, 
-//     snds, sn_idx_ds, dpds, pds, hover,
+// function sn_slider(cb_obj, current_ds, 
+//     all_networks_ds, sn_idx_ds, data_pts_ds, phases_ds, hover,
 //     plot_options_ds, tree_idx_ds) 
 // {
-//     // var cd = cds['data'];
-//     // var snd = snds['data'];
-//     // var dpd = dpds['data'];
-//     // var pd = pds['data'];
+//     // var cd = current_ds['data'];
+//     // var snd = all_networks_ds['data'];
+//     // var dpd = data_pts_ds['data'];
+//     // var pd = phases_ds['data'];
 //     // var current_sn_idx = sn_idx_ds['data'];
 //     var sn_idx = cb_obj.value;
 //     // var plot_options = plot_options_ds['data'];
@@ -46,23 +46,23 @@ function hide_data_points(cds, dpds, hover) {
 //     //     document.getElementById("current_tree_idx").innerHTML = 'All';
 //     // }
 
-//     for (var key in cds.data) {
-//         if (cds.data.hasOwnProperty(key)) {
+//     for (var key in current_ds.data) {
+//         if (current_ds.data.hasOwnProperty(key)) {
 //             if (show_trees == 'false') {
-//                 cds.data[key] = snds.data['spectral_networks'][sn_idx][key];
+//                 current_ds.data[key] = all_networks_ds.data['spectral_networks'][sn_idx][key];
 //             } else {
-//                 cds.data[key] = snds.data['spectral_networks'][sn_idx][0][key];
+//                 current_ds.data[key] = all_networks_ds.data['spectral_networks'][sn_idx][0][key];
 //             }
 //         }
 //     }
 
-//     // cds.trigger('change');
-//     cds.change.emit()
+//     // current_ds.trigger('change');
+//     current_ds.change.emit()
 //     // sn_idx_ds.trigger('change');
 //     sn_idx_ds.change.emit()
 //     // tree_idx_ds.trigger('change');
 //     // tree_idx_ds.change.emit()
-//     hide_data_points(cds, dpds, hover);
+//     hide_data_points(current_ds, data_pts_ds, hover);
 //     if (notebook == 'false') {
 //         document.getElementById("phase").innerHTML = pd['phase'][sn_idx];
 //     }
@@ -75,16 +75,16 @@ function hide_data_points(cds, dpds, hover) {
 //     //         cd[key] = snd['spectral_networks'][sn_idx][0][key];
 //     //     }
 //     // }
-//     // cds.trigger('change');
+//     // current_ds.trigger('change');
 //     // sn_idx_ds.trigger('change');
-//     // // hide_data_points(cds, dpds, hover);
+//     // // hide_data_points(current_ds, data_pts_ds, hover);
 //     // // if (notebook == 'false') {
 //     // //     document.getElementById("phase").innerHTML = pd['phase'][sn_idx];
 //     // // }
 // }
 
-function sn_slider(cb_obj, cds, //
-    snds, sn_idx_ds, dpds, pds, hover, //
+function sn_slider(cb_obj, current_ds, //
+    all_networks_ds, sn_idx_ds, data_pts_ds, phases_ds, hover, //
     plot_options_ds, tree_idx_ds, lines_ds, arrows_ds) {
 
     // Declare some local variables
@@ -96,45 +96,45 @@ function sn_slider(cb_obj, cds, //
     sn_idx_ds.data['i'] = sn_idx;
     
     // update the ColumnDataSource containing current spectral network data
-    for (var key in cds.data) {
-        if (cds.data.hasOwnProperty(key)) {
+    for (var key in current_ds.data) {
+        if (current_ds.data.hasOwnProperty(key)) {
             if (show_trees == 'false') {
-                cds.data[key] = snds[sn_idx][key];
+                current_ds.data[key] = all_networks_ds[sn_idx][key];
             } else {
-                cds.data[key] = snds[sn_idx][0][key];
+                current_ds.data[key] = all_networks_ds[sn_idx][0][key];
             }
         }
     }
 
     // update the ColumnDataSource containing current lines data
     for (var key in lines_ds.data) {
-        if (cds.data.hasOwnProperty(key)) {
+        if (current_ds.data.hasOwnProperty(key)) {
             if (show_trees == 'false') {
-                lines_ds.data[key] = snds[sn_idx][key];
+                lines_ds.data[key] = all_networks_ds[sn_idx][key];
             } else {
-                lines_ds.data[key] = snds[sn_idx][0][key];
+                lines_ds.data[key] = all_networks_ds[sn_idx][0][key];
             }
         }
     }
 
     // update the ColumnDataSource containing current arrows data
     for (var key in arrows_ds.data ) {
-        if (cds.data.hasOwnProperty(key)) {
+        if (current_ds.data.hasOwnProperty(key)) {
             if (show_trees == 'false') {
-                arrows_ds.data[key] = snds[sn_idx][key];
+                arrows_ds.data[key] = all_networks_ds[sn_idx][key];
             } else {
-                arrows_ds.data[key] = snds[sn_idx][0][key];
+                arrows_ds.data[key] = all_networks_ds[sn_idx][0][key];
             }
         }
     }
 
     // push changes to outside data given as argument to this function
     sn_idx_ds.change.emit()
-    cds.change.emit()
+    current_ds.change.emit()
     arrows_ds.change.emit()
     lines_ds.change.emit()
 
-    hide_data_points(cds, dpds, hover);
+    hide_data_points(current_ds, data_pts_ds, hover);
     if (notebook == 'false') {
         document.getElementById("phase").innerHTML = pd['phase'][sn_idx];
     }
@@ -142,10 +142,10 @@ function sn_slider(cb_obj, cds, //
 
 
 function change_soliton_tree(
-    cds, snds, sn_idx_ds, tree_idx_ds, plot_options_ds, change
+    current_ds, all_networks_ds, sn_idx_ds, tree_idx_ds, plot_options_ds, change
 ) {
-    var cd = cds.data;
-    var snd = snds.data;
+    var cd = current_ds.data;
+    var snd = all_networks_ds.data;
     var sn_idx = sn_idx_ds.data;
     var tree_idx = tree_idx_ds.data;
     var plot_options = plot_options_ds.data;
@@ -176,29 +176,29 @@ function change_soliton_tree(
         }
     }
     
-    cds.trigger('change');
+    current_ds.trigger('change');
     tree_idx['j'] = String(tree_j);
     tree_idx_ds.trigger('change');
 }
 
 function show_prev_soliton_tree(
-    cds, snds, sn_idx_ds, tree_idx_ds, plot_options_ds
+    current_ds, all_networks_ds, sn_idx_ds, tree_idx_ds, plot_options_ds
 ) {
     change_soliton_tree(
-        cds, snds, sn_idx_ds, tree_idx_ds, plot_options_ds, -1
+        current_ds, all_networks_ds, sn_idx_ds, tree_idx_ds, plot_options_ds, -1
     );
 }
 
 function show_next_soliton_tree(
-    cds, snds, sn_idx_ds, tree_idx_ds, plot_options_ds
+    current_ds, all_networks_ds, sn_idx_ds, tree_idx_ds, plot_options_ds
 ) {
     change_soliton_tree(
-        cds, snds, sn_idx_ds, tree_idx_ds, plot_options_ds, 1
+        current_ds, all_networks_ds, sn_idx_ds, tree_idx_ds, plot_options_ds, 1
     );   
 }
 
-function redraw_arrows(cds, x_range, y_range) {
-    var cd = cds.data;
+function redraw_arrows(current_ds, x_range, y_range) {
+    var cd = current_ds.data;
     var x_s = x_range.get('start');
     var x_e = x_range.get('end');
     var y_s = y_range.get('start');
@@ -246,7 +246,7 @@ function redraw_arrows(cds, x_range, y_range) {
         var Dy = y[a_i] - y[a_i - 1];
         cd['arrow_angle'][i] = Math.atan2(Dy, Dx) - (Math.PI / 2);
     }
-    cds.trigger('change');
+    current_ds.trigger('change');
 }
 
 function update_plot_range(x_range, y_range) {

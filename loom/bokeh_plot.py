@@ -33,7 +33,7 @@ def get_spectral_network_bokeh_plot(
     without_errors=False,
     download=False,
 ):
-    # logger = logging.getLogger(logger_name)
+    logger = logging.getLogger(logger_name)
 
     if without_errors is True:
         spectral_networks = [
@@ -81,10 +81,23 @@ def get_spectral_network_bokeh_plot(
         ]
     )
 
-    # Prepare a bokeh Figure.
+    # Data source for phases
+    phases_ds = ColumnDataSource({
+        'phase': [],
+    })
+    for sn in spectral_networks:
+        sn_phase = '{:.3f}'.format(sn.phase / pi)
+        phases_ds.data['phase'].append(sn_phase)
+
+    # Data source containing all the spectral networks
+    # XXX: changed this type of data because of problems with slider 
+    # all_networks_ds = ColumnDataSource({
+    #     'spectral_networks': [],
+    # })
+    all_networks_ds = []
+
+    # 1. Prepare a bokeh Figure.
     bokeh_figure = figure(
-        # tools=[ResetTool(), BoxZoomTool(), PanTool(), WheelZoomTool(),
-        #        SaveTool(), TapTool(), hover],
         tools='pan,wheel_zoom,box_zoom,reset,save,hover,tap',
         plot_width=plot_width,
         plot_height=plot_height,
@@ -94,64 +107,74 @@ def get_spectral_network_bokeh_plot(
     )
     bokeh_figure.grid.grid_line_color = None
 
+    # 2. Now add to the figure all parts of the plot that ARE NOT updated
+    # by the slider widget (in case there is more than one network to plot)
+
     # Data source for marked points, which are drawn for an illustration.
-    mpds = ColumnDataSource(
+    mphases_ds = ColumnDataSource(
         {'x': [], 'y': [], 'color': [], 'label': [], 'root': []}
     )
     for mp in marked_points:
         z, color = mp
-        mpds.data['x'].append(z.real)
-        mpds.data['y'].append(z.imag)
-        mpds.data['color'].append(color)
-        mpds.data['label'].append('')
-        mpds.data['root'].append('')
+        mphases_ds.data['x'].append(z.real)
+        mphases_ds.data['y'].append(z.imag)
+        mphases_ds.data['color'].append(color)
+        mphases_ds.data['label'].append('')
+        mphases_ds.data['root'].append('')
     bokeh_figure.circle(
-        x='x', y='y', size=5, color='color', source=mpds,
+        x='x', y='y', size=5, color='color', source=mphases_ds,
     )
 
     # Data source for punctures.
-    ppds = ColumnDataSource({'x': [], 'y': [], 'label': [], 'root': []})
+    pphases_ds = ColumnDataSource({'x': [], 'y': [], 'label': [], 'root': []})
     for pp in (sw_data.regular_punctures + sw_data.irregular_punctures):
         if pp.z == oo:
             continue
-        ppds.data['x'].append(pp.z.real)
-        ppds.data['y'].append(pp.z.imag)
-        ppds.data['label'].append(str(pp.label))
-        ppds.data['root'].append('')
+        pphases_ds.data['x'].append(pp.z.real)
+        pphases_ds.data['y'].append(pp.z.imag)
+        pphases_ds.data['label'].append(str(pp.label))
+        pphases_ds.data['root'].append('')
     bokeh_figure.circle(
         'x', 'y', size=10, color="#e6550D", fill_color=None,
-        line_width=3, source=ppds,
+        line_width=3, source=pphases_ds,
     )
 
     # Data source for branch points & cuts.
-    bpds = ColumnDataSource({'x': [], 'y': [], 'label': [], 'root': []})
+    bphases_ds = ColumnDataSource({'x': [], 'y': [], 'label': [], 'root': []})
     for bp in sw_data.branch_points:
         if bp.z == oo:
             continue
-        bpds.data['x'].append(bp.z.real)
-        bpds.data['y'].append(bp.z.imag)
-        bpds.data['label'].append(str(bp.label))
+        bphases_ds.data['x'].append(bp.z.real)
+        bphases_ds.data['y'].append(bp.z.imag)
+        bphases_ds.data['label'].append(str(bp.label))
         root_label = ''
         for root in bp.positive_roots:
             root_label += str(root.tolist()) + ', '
-        bpds.data['root'].append(root_label[:-2])
+        bphases_ds.data['root'].append(root_label[:-2])
 
-    bcds = ColumnDataSource({'xs': [], 'ys': []})
+    bcurrent_ds = ColumnDataSource({'xs': [], 'ys': []})
     for bl in sw_data.branch_points + sw_data.irregular_singularities:
         y_r = (2j * y_max) * complex(sw_data.branch_cut_rotation)
-        bcds.data['xs'].append([bl.z.real, bl.z.real + y_r.real])
-        bcds.data['ys'].append([bl.z.imag, bl.z.imag + y_r.imag])
+        bcurrent_ds.data['xs'].append([bl.z.real, bl.z.real + y_r.real])
+        bcurrent_ds.data['ys'].append([bl.z.imag, bl.z.imag + y_r.imag])
 
     bokeh_figure.x(
-        'x', 'y', size=10, color="#e6550D", line_width=3, source=bpds,
+        'x', 'y', size=10, color="#e6550D", line_width=3, source=bphases_ds,
     )
     bokeh_figure.multi_line(
         xs='xs', ys='ys', line_width=2, color='gray', line_dash='dashed',
-        source=bcds,
+        source=bcurrent_ds,
     )
 
+    plot_options_ds = ColumnDataSource(
+        {'notebook': [notebook], 'show_trees': [plot_two_way_streets]}
+    )
+
+    # 3. Now add to the figure all parts of the plot that ARE updated
+    # by the slider widget (in case there is more than one network to plot)
+
     # Data source for the current plot
-    cds = ColumnDataSource({
+    current_ds = ColumnDataSource({
         'ranges': [],
         'color': [],
         'arrow_x': [],
@@ -164,28 +187,21 @@ def get_spectral_network_bokeh_plot(
     })
 
     # Data source for plotting data points
-    dpds = ColumnDataSource({
+    data_pts_ds = ColumnDataSource({
         'x': [],
         'y': [],
-    })
-
-    # Data source for phases
-    pds = ColumnDataSource({
-        'phase': [],
-    })
-    for sn in spectral_networks:
-        sn_phase = '{:.3f}'.format(sn.phase / pi)
-        pds.data['phase'].append(sn_phase)
-
-    # Data source containing all the spectral networks
-    # snds = ColumnDataSource({
-    #     'spectral_networks': [],
-    # })
-    # XXX: changes this type of data because of problems with slider 
-    snds = []
+    }) 
 
     if plot_two_way_streets is True:
-        # snds['spectral_networks'] is a 2-dim array,
+    # XXX: disabling this feature temporarily.
+    # TO DO: Reinstate this feature later
+        logger.warning(
+            'Plotting of two-way streets is currently disabled.'
+        )
+        plot_two_way_streets = False
+
+    if plot_two_way_streets is True:
+        # all_networks_ds['spectral_networks'] is a 2-dim array,
         # where the first index chooses a spectral network
         # and the second index chooses a soliton tree
         # of the two-way streets of the spectral network.
@@ -213,13 +229,14 @@ def get_spectral_network_bokeh_plot(
                             data_entry[0][key] += tree_data[key]
                     data_entry.append(tree_data)
 
-            # snds.data['spectral_networks'].append(data_entry)
-            snds.append(data_entry)
+            # all_networks_ds.data['spectral_networks'].append(data_entry)
+            all_networks_ds.append(data_entry)
 
-        # init_data = snds.data['spectral_networks'][0][0]
-        init_data = snds[0][0]
+        # init_data = all_networks_ds.data['spectral_networks'][0][0]
+        init_data = all_networks_ds[0][0]
+
     else:
-        # snds['spectral_networks'] is a 1-dim array,
+        # all_networks_ds['spectral_networks'] is a 1-dim array,
         # of spectral network data.
         for sn in spectral_networks:
             skip_plotting = False
@@ -233,32 +250,33 @@ def get_spectral_network_bokeh_plot(
             sn_data = get_s_wall_plot_data(
                 sn.s_walls, sw_data, logger_name, sn.phase,
             )
-            # snds.data['spectral_networks'].append(sn_data)
-            snds.append(sn_data)
+            # all_networks_ds.data['spectral_networks'].append(sn_data)
+            all_networks_ds.append(sn_data)
 
-        # init_data = snds.data['spectral_networks'][0]
-        init_data = snds[0]
+        # init_data = all_networks_ds.data['spectral_networks'][0]
+        init_data = all_networks_ds[0]
 
     # Initialization of the current plot data source.
-    for key in list(cds.data.keys()):
-        cds.data[key] = init_data[key]
+    for key in list(current_ds.data.keys()):
+        current_ds.data[key] = init_data[key]
         
     # prepare data sources for various objects to be plotted
     lines_ds = ColumnDataSource(
-        data={k: cds.data[k] for k in 
+        data={k: current_ds.data[k] for k in 
               ['xs', 'ys', 'color', 'root', 'label'] 
-              if k in list(cds.data.keys())
+              if k in list(current_ds.data.keys())
               }
     )
     arrows_ds = ColumnDataSource(
-        data={k: cds.data[k] for k in 
+        data={k: current_ds.data[k] for k in 
               ['arrow_x', 'arrow_y', 'color', 'arrow_angle',
               'root', 'label'] 
-              if k in list(cds.data.keys())
+              if k in list(current_ds.data.keys())
              }
     )
 
-    bokeh_figure.scatter(x='x', y='y', alpha=0.5, source=dpds,)
+    # draw data points
+    bokeh_figure.scatter(x='x', y='y', alpha=0.5, source=data_pts_ds,)
     
     # draw lines
     bokeh_figure.multi_line(
@@ -271,6 +289,8 @@ def get_spectral_network_bokeh_plot(
         x='arrow_x', y='arrow_y', color='color', alpha='root',
         angle='arrow_angle', size=8, source=arrows_ds,
     )
+
+    # 4. Now start preparing the actual plot.
 
     bokeh_obj = {}
     notebook_vform_elements = []
@@ -294,108 +314,110 @@ def get_spectral_network_bokeh_plot(
         bokeh_figure.x_range.js_on_change('start', range_callback)
         bokeh_figure.y_range.js_on_change('start', range_callback)
 
-#     # 'Redraw arrows' button.
-#     redraw_arrows_button = Button(
-#         label='Redraw arrows',
-#     )
-#     redraw_arrows_button.js_on_click(
-#         CustomJS(
-#             args={
-#                 'cds': cds,
-#                 'x_range': bokeh_figure.x_range,
-#                 'y_range': bokeh_figure.y_range
-#             },
-#             code=(custom_js_code + 'redraw_arrows(cds, x_range, y_range);'),
-#         )
-#     )
-#     bokeh_obj['redraw_arrows_button'] = redraw_arrows_button
-#     notebook_vform_elements.append(redraw_arrows_button)
+    # XXX: Temporarily disabled this
+    # TO DO: reinstate later, and remove the following line (it is just a patch)
+    tree_idx_ds = ColumnDataSource()
+    sn_idx_ds = ColumnDataSource()
 
-#     # 'Show data points' button
-#     show_data_points_button = Button(
-#         label='Show data points',
-#     )
-#     show_data_points_button.js_on_event(
-#         ButtonClick,
-#         CustomJS(
-#             args={'cds': cds, 'dpds': dpds, 'hover': hover},
-#             code=(custom_js_code + 'show_data_points(cds, dpds, hover);'),
-#         )
-#     )
-#     bokeh_obj['show_data_points_button'] = show_data_points_button
-#     notebook_vform_elements.append(show_data_points_button)
+    # # 'Redraw arrows' button.
+    # redraw_arrows_button = Button(
+    #     label='Redraw arrows',
+    # )
+    # redraw_arrows_button.js_on_click(
+    #     CustomJS(
+    #         args={
+    #             'current_ds': current_ds,
+    #             'x_range': bokeh_figure.x_range,
+    #             'y_range': bokeh_figure.y_range
+    #         },
+    #         code=(custom_js_code + 'redraw_arrows(current_ds, x_range, y_range);'),
+    #     )
+    # )
+    # bokeh_obj['redraw_arrows_button'] = redraw_arrows_button
+    # notebook_vform_elements.append(redraw_arrows_button)
 
-#     # 'Hide data points' button
-#     hide_data_points_button = Button(
-#         label='Hide data points',
-#     )
-#     hide_data_points_button.js_on_event(
-#         ButtonClick,
-#         CustomJS(
-#             args={'cds': cds, 'dpds': dpds, 'hover': hover},
-#             code=(custom_js_code + 'hide_data_points(cds, dpds, hover);'),
-#         )
-#     )
-#     bokeh_obj['hide_data_points_button'] = hide_data_points_button
-#     notebook_vform_elements.append(hide_data_points_button)
+    # # 'Show data points' button
+    # show_data_points_button = Button(
+    #     label='Show data points',
+    # )
+    # show_data_points_button.js_on_event(
+    #     ButtonClick,
+    #     CustomJS(
+    #         args={'current_ds': current_ds, 'data_pts_ds': data_pts_ds, 'hover': hover},
+    #         code=(custom_js_code + 'show_data_points(current_ds, data_pts_ds, hover);'),
+    #     )
+    # )
+    # bokeh_obj['show_data_points_button'] = show_data_points_button
+    # notebook_vform_elements.append(show_data_points_button)
 
-    # Prev/Next soliton tree button
-    tree_idx_ds = ColumnDataSource({'j': ['0']})
-    sn_idx_ds = ColumnDataSource({'i': ['0']})
-    plot_options_ds = ColumnDataSource(
-        {'notebook': [notebook], 'show_trees': [plot_two_way_streets]}
-    )
+    # # 'Hide data points' button
+    # hide_data_points_button = Button(
+    #     label='Hide data points',
+    # )
+    # hide_data_points_button.js_on_event(
+    #     ButtonClick,
+    #     CustomJS(
+    #         args={'current_ds': current_ds, 'data_pts_ds': data_pts_ds, 
+    #           'hover': hover},
+    #         code=(custom_js_code + 'hide_data_points(current_ds, data_pts_ds, 
+    #           hover);'),
+    #     )
+    # )
+    # bokeh_obj['hide_data_points_button'] = hide_data_points_button
+    # notebook_vform_elements.append(hide_data_points_button)
 
-    if plot_two_way_streets is True:
-        prev_soliton_tree_button = Button(
-            label='<',
-        )
-        prev_soliton_tree_button.js_on_event(
-            ButtonClick,
-            CustomJS(
-                args={
-                    'cds': cds, 'snds': snds, 'sn_idx_ds': sn_idx_ds,
-                    'tree_idx_ds': tree_idx_ds,
-                    'plot_options_ds': plot_options_ds,
-                },
-                code=(
-                    custom_js_code +
-                    'show_prev_soliton_tree(cds, snds, sn_idx_ds, tree_idx_ds, '
-                    'plot_options_ds);'
-                ),
-            )
-        )
-        bokeh_obj['prev_soliton_tree_button'] = prev_soliton_tree_button
-        notebook_vform_elements.append(prev_soliton_tree_button)
+    # # Prev/Next soliton tree button
+    # tree_idx_ds = ColumnDataSource({'j': ['0']})
+    # sn_idx_ds = ColumnDataSource({'i': ['0']})
 
-        next_soliton_tree_button = Button(
-            label='>',
-        )
-        next_soliton_tree_button.js_on_event(
-            ButtonClick,
-            CustomJS(
-                args={
-                    'cds': cds, 'snds': snds, 'sn_idx_ds': sn_idx_ds,
-                    'tree_idx_ds': tree_idx_ds,
-                    'plot_options_ds': plot_options_ds,
-                },
-                code=(
-                    custom_js_code +
-                    'show_next_soliton_tree(cds, snds, sn_idx_ds, tree_idx_ds, '
-                    'plot_options_ds);'
-                ),
-            )
-        )
-        bokeh_obj['next_soliton_tree_button'] = next_soliton_tree_button
-        notebook_vform_elements.append(next_soliton_tree_button)
+    # if plot_two_way_streets is True:
+    #     prev_soliton_tree_button = Button(
+    #         label='<',
+    #     )
+    #     prev_soliton_tree_button.js_on_event(
+    #         ButtonClick,
+    #         CustomJS(
+    #             args={
+    #                 'current_ds': current_ds, 
+    #                 'all_networks_ds': all_networks_ds, 
+    #                 'sn_idx_ds': sn_idx_ds,
+    #                 'tree_idx_ds': tree_idx_ds,
+    #                 'plot_options_ds': plot_options_ds,
+    #             },
+    #             code=(
+    #                 custom_js_code +
+    #                 'show_prev_soliton_tree(current_ds, all_networks_ds, '+'
+    #                 'sn_idx_ds, tree_idx_ds, '+
+    #                 'plot_options_ds);'
+    #             ),
+    #         )
+    #     )
+    #     bokeh_obj['prev_soliton_tree_button'] = prev_soliton_tree_button
+    #     notebook_vform_elements.append(prev_soliton_tree_button)
+
+    #     next_soliton_tree_button = Button(
+    #         label='>',
+    #     )
+    #     next_soliton_tree_button.js_on_event(
+    #         ButtonClick,
+    #         CustomJS(
+    #             args={
+    #                 'current_ds': current_ds, 'all_networks_ds': all_networks_ds, 'sn_idx_ds': sn_idx_ds,
+    #                 'tree_idx_ds': tree_idx_ds,
+    #                 'plot_options_ds': plot_options_ds,
+    #             },
+    #             code=(
+    #                 custom_js_code +
+    #                 'show_next_soliton_tree(current_ds, all_networks_ds, sn_idx_ds, tree_idx_ds, '
+    #                 'plot_options_ds);'
+    #             ),
+    #         )
+    #     )
+    #     bokeh_obj['next_soliton_tree_button'] = next_soliton_tree_button
+    #     notebook_vform_elements.append(next_soliton_tree_button)
 
     # Slider
-    # num_of_plots = len(snds.data['spectral_networks'])
-    print('len(snds): {}'.format(len(snds)))
-    print('len(snds[0]): {}'.format(len(snds[0])))
-    print('type(snds[0]): {}'.format(type(snds[0])))
-    print('snds[0].keys(): {}'.format(snds[0].keys()))
-    num_of_plots = len(snds)
+    num_of_plots = len(all_networks_ds)
     if num_of_plots > 1:
         sn_slider = Slider(
             start=0, end=num_of_plots - 1,
@@ -406,8 +428,10 @@ def get_spectral_network_bokeh_plot(
             'value',
             CustomJS(
                 args={
-                    'cds': cds, 'snds': snds, 'sn_idx_ds': sn_idx_ds,
-                    'dpds': dpds, 'pds': pds, 'hover': hover,
+                    'current_ds': current_ds, 
+                    'all_networks_ds': all_networks_ds, 'sn_idx_ds': sn_idx_ds,
+                    'data_pts_ds': data_pts_ds, 'phases_ds': phases_ds, 
+                    'hover': hover,
                     'plot_options_ds': plot_options_ds, 
                     'tree_idx_ds': tree_idx_ds,
                     'lines_ds' : lines_ds, 'arrows_ds' : arrows_ds
@@ -415,9 +439,9 @@ def get_spectral_network_bokeh_plot(
                 code=(custom_js_code +
                     'sn_slider(' +
                     'cb_obj, ' +
-                    'cds, ' +
-                    'snds, sn_idx_ds, dpds, pds, hover, '+
-                    'plot_options_ds, tree_idx_ds, lines_ds, arrows_ds)'
+                    'current_ds, ' +
+                    'all_networks_ds, sn_idx_ds, data_pts_ds, phases_ds, '+
+                    'hover, plot_options_ds, tree_idx_ds, lines_ds, arrows_ds)'
                 ),
             )
         )
