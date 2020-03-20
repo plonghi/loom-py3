@@ -402,100 +402,87 @@ def get_spectral_network_bokeh_plot(
             value=0, step=1, title="spectral network #"
         )
 
-        slider_callback = CustomJS(
-            args={
-                    'cds': cds, 'snds': snds, 
-                    'sn_idx_ds': sn_idx_ds,
+        # slider_callback = CustomJS(
+        #     args={
+        #             'cds': cds, 'snds': snds, 
+        #             'sn_idx_ds': sn_idx_ds,
+        #             'dpds': dpds, 'pds': pds, 'hover': hover,
+        #             'plot_options_ds': plot_options_ds, 
+        #             'tree_idx_ds': tree_idx_ds,
+        #             'lines_ds' : lines_ds, 'arrows_ds' : arrows_ds
+        #         },
+        #     code=custom_js_code+"""
+        #     console.log('called the slider callback!')
+        #     var sn_idx = cb_obj.value;
+        #     var show_trees = plot_options_ds.data['show_trees'];
+
+        #     var notebook = plot_options_ds.data['notebook'];
+
+        #     sn_idx_ds.data['i'] = sn_idx;
+            
+        #     for (var key in cds.data) {
+        #         if (cds.data.hasOwnProperty(key)) {
+        #             if (show_trees == 'false') {
+        #                 cds.data[key] = snds[sn_idx][key];
+        #             } else {
+        #                 cds.data[key] = snds[sn_idx][0][key];
+        #             }
+        #         }
+        #     }
+
+            
+        #     for (var key in lines_ds.data) {
+        #         if (cds.data.hasOwnProperty(key)) {
+        #             if (show_trees == 'false') {
+        #                 lines_ds.data[key] = snds[sn_idx][key];
+        #             } else {
+        #                 lines_ds.data[key] = snds[sn_idx][0][key];
+        #             }
+        #         }
+        #     }
+
+        #     for (var key in arrows_ds.data ) {
+        #         if (cds.data.hasOwnProperty(key)) {
+        #             if (show_trees == 'false') {
+        #                 arrows_ds.data[key] = snds[sn_idx][key];
+        #             } else {
+        #                 arrows_ds.data[key] = snds[sn_idx][0][key];
+        #             }
+        #         }
+        #     }
+
+        #     sn_idx_ds.change.emit()
+        #     cds.change.emit()
+        #     arrows_ds.change.emit()
+        #     lines_ds.change.emit()
+
+        #     hide_data_points(cds, dpds, hover);
+        #     if (notebook == 'false') {
+        #         document.getElementById("phase").innerHTML = pd['phase'][sn_idx];
+        #     }
+        #     """
+        # )
+        # sn_slider.js_on_change('value', slider_callback)
+
+        sn_slider.js_on_change(
+            'value',
+            CustomJS(
+                args={
+                    'cds': cds, 'snds': snds, 'sn_idx_ds': sn_idx_ds,
                     'dpds': dpds, 'pds': pds, 'hover': hover,
                     'plot_options_ds': plot_options_ds, 
                     'tree_idx_ds': tree_idx_ds,
                     'lines_ds' : lines_ds, 'arrows_ds' : arrows_ds
                 },
-            code=custom_js_code+"""
-            console.log('called the slider callback!')
-            var sn_idx = cb_obj.value;
-            var show_trees = plot_options_ds.data['show_trees'];
-            // var show_trees = 'false';
-            var notebook = plot_options_ds.data['notebook'];
-
-            sn_idx_ds.data['i'] = sn_idx;
-
-            console.log('choosing spectral network number')
-            console.log(sn_idx)
-            
-            for (var key in cds.data) {
-                if (cds.data.hasOwnProperty(key)) {
-                    if (show_trees == 'false') {
-                        cds.data[key] = snds[sn_idx][key];
-                    } else {
-                        cds.data[key] = snds[sn_idx][0][key];
-                    }
-                }
-            }
-
-            var lines_ds_keys = ['xs', 'ys', 'color', 'root', 'label']
-            for (var i = 0; i < lines_ds_keys.length; i++) {
-                var key = lines_ds_keys[i]
-                console.log('updating key')
-                console.log(key)
-                if (cds.data.hasOwnProperty(key)) {
-                    if (show_trees == 'false') {
-                        console.log('updating data in lines_ds for key')
-                        console.log(key)
-                        lines_ds.data[key] = snds[sn_idx][key];
-                        if (key=='xs') {
-                            console.log('in particular lines_ds.data[xs][3][6] is')
-                            console.log(lines_ds.data['xs'][3][6])
-                            console.log('compare with')
-                            console.log(snds[sn_idx]['xs'][3][6] )
-                        }
-                    } else {
-                        lines_ds.data[key] = snds[sn_idx][0][key];
-                    }
-                }
-            }
-
-            for (var key in ['arrow_x', 'arrow_y', 'color', 'arrow_angle',
-                      'root', 'label'] ) {
-                if (cds.data.hasOwnProperty(key)) {
-                    if (show_trees == 'false') {
-                        arrows_ds.data[key] = snds[sn_idx][key];
-                    } else {
-                        arrows_ds.data[key] = snds[sn_idx][0][key];
-                    }
-                }
-            }
-
-            cds.change.emit()
-            sn_idx_ds.change.emit()
-            arrows_ds.change.emit()
-            lines_ds.change.emit()
-
-            hide_data_points(cds, dpds, hover);
-            if (notebook == 'false') {
-                document.getElementById("phase").innerHTML = pd['phase'][sn_idx];
-            }
-            """
+                code=(custom_js_code +
+                    'sn_slider(' +
+                    'cb_obj, ' +
+                    'cds, ' +
+                    'snds, sn_idx_ds, dpds, pds, hover, '+
+                    'plot_options_ds, tree_idx_ds, lines_ds, arrows_ds)'
+                ),
+            )
         )
-        sn_slider.js_on_change('value', slider_callback)
-
-        # sn_slider.js_on_change(
-        #     'value',
-        #     CustomJS(
-        #         args={
-        #             'cds': cds, 'snds': snds, 'sn_idx_ds': sn_idx_ds,
-        #             'dpds': dpds, 'pds': pds, 'hover': hover,
-        #             'plot_options_ds': plot_options_ds, 'tree_idx_ds': tree_idx_ds
-        #         },
-        #         code=(custom_js_code +
-        #             'sn_slider(' +
-        #             'cb_obj ' +
-        #             'cds, ' +
-        #             'snds, sn_idx_ds, dpds, pds, hover, '+
-        #             'plot_options, tree_idx_ds);'
-        #         ),
-        #     )
-        # )
         plot = column(bokeh_figure, sn_slider)
         notebook_vform_elements = (
             [bokeh_figure, sn_slider] + notebook_vform_elements
