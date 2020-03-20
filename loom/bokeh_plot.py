@@ -111,59 +111,64 @@ def get_spectral_network_bokeh_plot(
     # by the slider widget (in case there is more than one network to plot)
 
     # Data source for marked points, which are drawn for an illustration.
-    mphases_ds = ColumnDataSource(
+    marked_pts_ds = ColumnDataSource(
         {'x': [], 'y': [], 'color': [], 'label': [], 'root': []}
     )
     for mp in marked_points:
         z, color = mp
-        mphases_ds.data['x'].append(z.real)
-        mphases_ds.data['y'].append(z.imag)
-        mphases_ds.data['color'].append(color)
-        mphases_ds.data['label'].append('')
-        mphases_ds.data['root'].append('')
+        marked_pts_ds.data['x'].append(z.real)
+        marked_pts_ds.data['y'].append(z.imag)
+        marked_pts_ds.data['color'].append(color)
+        marked_pts_ds.data['label'].append('')
+        marked_pts_ds.data['root'].append('')
     bokeh_figure.circle(
-        x='x', y='y', size=5, color='color', source=mphases_ds,
+        x='x', y='y', size=5, color='color', source=marked_pts_ds,
     )
 
     # Data source for punctures.
-    pphases_ds = ColumnDataSource({'x': [], 'y': [], 'label': [], 'root': []})
+    punctures_ds = ColumnDataSource(
+        {'x': [], 'y': [], 'label': [], 'root': []}
+    )
     for pp in (sw_data.regular_punctures + sw_data.irregular_punctures):
         if pp.z == oo:
             continue
-        pphases_ds.data['x'].append(pp.z.real)
-        pphases_ds.data['y'].append(pp.z.imag)
-        pphases_ds.data['label'].append(str(pp.label))
-        pphases_ds.data['root'].append('')
+        punctures_ds.data['x'].append(pp.z.real)
+        punctures_ds.data['y'].append(pp.z.imag)
+        punctures_ds.data['label'].append(str(pp.label))
+        punctures_ds.data['root'].append('')
     bokeh_figure.circle(
         'x', 'y', size=10, color="#e6550D", fill_color=None,
-        line_width=3, source=pphases_ds,
+        line_width=3, source=punctures_ds,
     )
 
     # Data source for branch points & cuts.
-    bphases_ds = ColumnDataSource({'x': [], 'y': [], 'label': [], 'root': []})
+    branch_pts_ds = ColumnDataSource(
+        {'x': [], 'y': [], 'label': [], 'root': []}
+    )
     for bp in sw_data.branch_points:
         if bp.z == oo:
             continue
-        bphases_ds.data['x'].append(bp.z.real)
-        bphases_ds.data['y'].append(bp.z.imag)
-        bphases_ds.data['label'].append(str(bp.label))
+        branch_pts_ds.data['x'].append(bp.z.real)
+        branch_pts_ds.data['y'].append(bp.z.imag)
+        branch_pts_ds.data['label'].append(str(bp.label))
         root_label = ''
         for root in bp.positive_roots:
             root_label += str(root.tolist()) + ', '
-        bphases_ds.data['root'].append(root_label[:-2])
+        branch_pts_ds.data['root'].append(root_label[:-2])
 
-    bcurrent_ds = ColumnDataSource({'xs': [], 'ys': []})
+    branch_cut_ds = ColumnDataSource({'xs': [], 'ys': []})
     for bl in sw_data.branch_points + sw_data.irregular_singularities:
         y_r = (2j * y_max) * complex(sw_data.branch_cut_rotation)
-        bcurrent_ds.data['xs'].append([bl.z.real, bl.z.real + y_r.real])
-        bcurrent_ds.data['ys'].append([bl.z.imag, bl.z.imag + y_r.imag])
+        branch_cut_ds.data['xs'].append([bl.z.real, bl.z.real + y_r.real])
+        branch_cut_ds.data['ys'].append([bl.z.imag, bl.z.imag + y_r.imag])
 
     bokeh_figure.x(
-        'x', 'y', size=10, color="#e6550D", line_width=3, source=bphases_ds,
+        'x', 'y', size=10, color="#e6550D", line_width=3, 
+        source=branch_pts_ds,
     )
     bokeh_figure.multi_line(
         xs='xs', ys='ys', line_width=2, color='gray', line_dash='dashed',
-        source=bcurrent_ds,
+        source=branch_cut_ds,
     )
 
     plot_options_ds = ColumnDataSource(
