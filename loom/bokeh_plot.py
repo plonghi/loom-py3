@@ -178,19 +178,6 @@ def get_spectral_network_bokeh_plot(
     # 3. Now add to the figure all parts of the plot that ARE updated
     # by the slider widget (in case there is more than one network to plot)
 
-    # Data source for the current plot
-    current_ds = ColumnDataSource({
-        'ranges': [],
-        'color': [],
-        'arrow_x': [],
-        'arrow_y': [],
-        'arrow_angle': [],
-        'label': [],
-        'root': [],
-        'xs': [],
-        'ys': []
-    })
-
     # Data source for plotting data points
     data_pts_ds = ColumnDataSource({
         'x': [],
@@ -260,23 +247,19 @@ def get_spectral_network_bokeh_plot(
 
         # init_data = all_networks_ds.data['spectral_networks'][0]
         init_data = all_networks_ds[0]
-
-    # Initialization of the current plot data source.
-    for key in list(current_ds.data.keys()):
-        current_ds.data[key] = init_data[key]
         
     # prepare data sources for various objects to be plotted
     lines_ds = ColumnDataSource(
-        data={k: current_ds.data[k] for k in 
+        data={key: init_data[key] for key in 
               ['xs', 'ys', 'color', 'root', 'label'] 
-              if k in list(current_ds.data.keys())
+              if key in list(init_data.keys())
               }
     )
     arrows_ds = ColumnDataSource(
-        data={k: current_ds.data[k] for k in 
+        data={key: init_data[key] for key in 
               ['arrow_x', 'arrow_y', 'color', 'arrow_angle',
               'root', 'label'] 
-              if k in list(current_ds.data.keys())
+              if key in list(init_data.keys())
              }
     )
 
@@ -433,7 +416,6 @@ def get_spectral_network_bokeh_plot(
             'value',
             CustomJS(
                 args={
-                    'current_ds': current_ds, 
                     'all_networks_ds': all_networks_ds, 'sn_idx_ds': sn_idx_ds,
                     'data_pts_ds': data_pts_ds, 'phases_ds': phases_ds, 
                     'hover': hover,
@@ -444,7 +426,6 @@ def get_spectral_network_bokeh_plot(
                 code=(custom_js_code +
                     'sn_slider(' +
                     'cb_obj, ' +
-                    'current_ds, ' +
                     'all_networks_ds, sn_idx_ds, data_pts_ds, phases_ds, '+
                     'hover, plot_options_ds, tree_idx_ds, lines_ds, arrows_ds)'
                 ),

@@ -13,8 +13,7 @@ function show_data_points(current_ds, data_pts_ds, hover) {
     data_pts_ds.change.emit();
 }
 
-function hide_data_points(current_ds, data_pts_ds, hover) {
-    var cd = current_ds.data;
+function hide_data_points(data_pts_ds, hover) {
     var dpd = data_pts_ds.data;
     dpd['x'] = [];
     dpd['y'] = [];
@@ -83,7 +82,7 @@ function hide_data_points(current_ds, data_pts_ds, hover) {
 //     // // }
 // }
 
-function sn_slider(cb_obj, current_ds, //
+function sn_slider(cb_obj, //
     all_networks_ds, sn_idx_ds, data_pts_ds, phases_ds, hover, //
     plot_options_ds, tree_idx_ds, lines_ds, arrows_ds) {
 
@@ -94,21 +93,10 @@ function sn_slider(cb_obj, current_ds, //
 
     // change the index of the current spectral network
     sn_idx_ds.data['i'] = sn_idx;
-    
-    // update the ColumnDataSource containing current spectral network data
-    for (var key in current_ds.data) {
-        if (current_ds.data.hasOwnProperty(key)) {
-            if (show_trees == 'false') {
-                current_ds.data[key] = all_networks_ds[sn_idx][key];
-            } else {
-                current_ds.data[key] = all_networks_ds[sn_idx][0][key];
-            }
-        }
-    }
 
     // update the ColumnDataSource containing current lines data
     for (var key in lines_ds.data) {
-        if (current_ds.data.hasOwnProperty(key)) {
+        if (all_networks_ds[sn_idx].hasOwnProperty(key)) {
             if (show_trees == 'false') {
                 lines_ds.data[key] = all_networks_ds[sn_idx][key];
             } else {
@@ -119,7 +107,7 @@ function sn_slider(cb_obj, current_ds, //
 
     // update the ColumnDataSource containing current arrows data
     for (var key in arrows_ds.data ) {
-        if (current_ds.data.hasOwnProperty(key)) {
+        if (all_networks_ds[sn_idx].hasOwnProperty(key)) {
             if (show_trees == 'false') {
                 arrows_ds.data[key] = all_networks_ds[sn_idx][key];
             } else {
@@ -130,11 +118,10 @@ function sn_slider(cb_obj, current_ds, //
 
     // push changes to outside data given as argument to this function
     sn_idx_ds.change.emit()
-    current_ds.change.emit()
     arrows_ds.change.emit()
     lines_ds.change.emit()
 
-    hide_data_points(current_ds, data_pts_ds, hover);
+    hide_data_points(data_pts_ds, hover);
     if (notebook == 'false') {
         document.getElementById("phase").innerHTML = pd['phase'][sn_idx];
     }
