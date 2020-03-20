@@ -407,7 +407,9 @@ def get_spectral_network_bokeh_plot(
                     'cds': cds, 'snds': snds, 
                     'sn_idx_ds': sn_idx_ds,
                     'dpds': dpds, 'pds': pds, 'hover': hover,
-                    'plot_options_ds': plot_options_ds, 'tree_idx_ds': tree_idx_ds
+                    'plot_options_ds': plot_options_ds, 
+                    'tree_idx_ds': tree_idx_ds,
+                    'lines_ds' : lines_ds, 'arrows_ds' : arrows_ds
                 },
             code=custom_js_code+"""
             console.log('called the slider callback!')
@@ -423,6 +425,8 @@ def get_spectral_network_bokeh_plot(
             
             for (var key in cds.data) {
                 if (cds.data.hasOwnProperty(key)) {
+                    console.log('updating cds.data[key] with key')
+                    console.log(key)
                     if (show_trees == 'false') {
                         cds.data[key] = snds[sn_idx][key];
                     } else {
@@ -431,8 +435,35 @@ def get_spectral_network_bokeh_plot(
                 }
             }
 
+            for (var key in ['xs', 'ys', 'color', 'root', 'label'] ) {
+                if (cds.data.hasOwnProperty(key)) {
+                    if (show_trees == 'false') {
+                        lines_ds.data[key] = snds[sn_idx][key];
+                    } else {
+                        lines_ds.data[key] = snds[sn_idx][0][key];
+                    }
+                }
+            }
+
+            for (var key in ['arrow_x', 'arrow_y', 'color', 'arrow_angle',
+                      'root', 'label'] ) {
+                if (cds.data.hasOwnProperty(key)) {
+                    if (show_trees == 'false') {
+                        arrows_ds.data[key] = snds[sn_idx][key];
+                    } else {
+                        arrows_ds.data[key] = snds[sn_idx][0][key];
+                    }
+                }
+            }
+
             cds.change.emit()
             sn_idx_ds.change.emit()
+            arrows_ds.change.emit()
+            lines_ds.change.emit()
+
+            console.log('lines_ds.data[xs][3][6] is now')
+            console.log(lines_ds.data['xs'][3][6])
+            
             hide_data_points(cds, dpds, hover);
             if (notebook == 'false') {
                 document.getElementById("phase").innerHTML = pd['phase'][sn_idx];
