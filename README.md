@@ -31,9 +31,9 @@ In addition, ``loom`` contains a web frontend that drives a WSGI application, wh
 
 
 #### GUI
-![loom screenshot](https://github.com/plonghi/loom-py3/blob/ETH-server/screeenshots/loom_desktop.png "loom desktop")
-![loom menu screenshot](https://github.com/plonghi/loom-py3/blob/ETH-server/screeenshots/loom_menu.png "loom menu")
-![loom plot screenshot](https://github.com/plonghi/loom-py3/blob/ETH-server/screeenshots/loom_plot.png "loom plot")
+![loom screenshot](https://github.com/plonghi/loom-py3/blob/ETH-server/screenshots/loom_desktop.png "loom desktop")
+![loom menu screenshot](https://github.com/plonghi/loom-py3/blob/ETH-server/screenshots/loom_menu.png "loom menu")
+![loom plot screenshot](https://github.com/plonghi/loom-py3/blob/ETH-server/screenshots/loom_plot.png "loom plot")
 
 ## How to use ``loom`` web UI
 
