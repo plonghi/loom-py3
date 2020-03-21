@@ -2,7 +2,7 @@
 
 ## Ubuntu 18.04 Bionic (Python 3)
 
-Uses loom branch [stable_v3_2](https://github.com/rda0/loom/tree/stable_v3_2)
+Uses loom branch [ETH-server](https://github.com/plonghi/loom-py3/tree/ETH-server)
 
 System packages:
 
@@ -27,11 +27,11 @@ apt install sagemath
 Specific python module versions:
 
 ```bash
-pip install numpy==1.10.1
-pip install matplotlib==1.5.0
-pip install scipy==0.15.1
-pip install sympy==1.0
-pip install bokeh==0.10.0
+pip3 install numpy==1.18.1
+pip3 install matplotlib==3.2.1
+pip3 install scipy==0.19.1
+pip3 install sympy==1.1.1
+pip3 install bokeh==2.0.0
 ```
 
 Configure apache2:
@@ -65,7 +65,7 @@ systemctl restart apache2
 
 ## Debian 10 Buster (Python 3)
 
-Uses loom branch [stable_v3_3](https://github.com/rda0/loom/tree/stable_v3_3)
+Uses loom branch [stable_v3_3](https://github.com/plonghi/loom-py3/tree/stable_v3_3)
 
 System packages:
 
@@ -132,7 +132,7 @@ systemctl restart apache2
 
 ## Ubuntu 18.04 Bionic (Python 2)
 
-Uses loom branch [stable_v3_2](https://github.com/rda0/loom/tree/stable_v3_2)
+Uses loom branch [stable_v3_2](https://github.com/plonghi/loom-py3/tree/stable_v3_2)
 
 System packages:
 
