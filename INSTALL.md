@@ -54,7 +54,7 @@ Configure apache2:
 </VirtualHost>
 ```
 
-Clone the repo to `/var/www/loom` and checkout branch `stable_v3_2`.
+Clone the repo to `/var/www/loom` and checkout branch `stable_ETH-server`.
 
 Start WSGI website:
 
