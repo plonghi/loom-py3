@@ -73,14 +73,6 @@ def get_spectral_network_bokeh_plot(
     plot_x_range, plot_y_range = plot_range
     y_min, y_max = plot_y_range
 
-    # Setup tools.
-    hover = HoverTool(
-        tooltips=[
-            ('name', '@label'),
-            ('root', '@root'),
-        ]
-    )
-
     # Data source for phases
     phases_ds = ColumnDataSource({
         'phase': [],
@@ -98,7 +90,7 @@ def get_spectral_network_bokeh_plot(
 
     # 1. Prepare a bokeh Figure.
     bokeh_figure = figure(
-        tools='pan,wheel_zoom,box_zoom,reset,save,hover,tap',
+        tools='box_zoom,reset,save,tap',
         plot_width=plot_width,
         plot_height=plot_height,
         title=None,
@@ -106,6 +98,19 @@ def get_spectral_network_bokeh_plot(
         y_range=plot_y_range,
     )
     bokeh_figure.grid.grid_line_color = None
+
+    # declare instances of certain tool objects for the plot
+    wheel_zoom_tool = WheelZoomTool()
+    bokeh_figure.add_tools(wheel_zoom_tool)
+    hover_tool = HoverTool(
+        tooltips=[
+            ('name', '@label'),
+            ('root', '@root'),
+        ]
+    )
+    bokeh_figure.add_tools(hover_tool)
+    pan_tool = PanTool()
+    bokeh_figure.add_tools(pan_tool)
 
     # 2. Now add to the figure all parts of the plot that ARE NOT updated
     # by the slider widget (in case there is more than one network to plot)
@@ -443,8 +448,10 @@ def get_spectral_network_bokeh_plot(
 
     bokeh_obj['plot'] = plot
     
-    # bokeh_figure.toolbar.active_scroll = plot.select_one(WheelZoomTool)
-    # bokeh_figure.toolbar.active_scroll = 'auto'
+    # Select plot tools that are activated by default 
+    bokeh_figure.toolbar.active_scroll = wheel_zoom_tool
+    bokeh_figure.toolbar.active_drag = pan_tool
+    bokeh_figure.toolbar.active_inspect = hover_tool
 
     if notebook is True:
         # TODO: Include phase text input
