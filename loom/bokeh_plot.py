@@ -183,12 +183,6 @@ def get_spectral_network_bokeh_plot(
     # 3. Now add to the figure all parts of the plot that ARE updated
     # by the slider widget (in case there is more than one network to plot)
 
-    # Data source for plotting data points
-    data_pts_ds = ColumnDataSource({
-        'x': [],
-        'y': [],
-    }) 
-
     if plot_two_way_streets is True:
     # XXX: disabling this feature temporarily.
     # TO DO: Reinstate this feature later
@@ -268,8 +262,25 @@ def get_spectral_network_bokeh_plot(
              }
     )
 
+    # collect all daat points from all walls
+    dp_x = []
+    dp_y = []
+    for dp_i in range(len(init_data)):
+        dp_x += list(init_data['xs'][dp_i])
+        dp_y += list(init_data['ys'][dp_i])
+    data_pts_ds = ColumnDataSource({
+        'x': dp_x,
+        'y': dp_y,
+    }) 
+
+    # data points to be plotted, by default none
+    plot_data_pts_ds = ColumnDataSource({
+        'x': [],
+        'y': [],
+    }) 
+
     # draw data points
-    bokeh_figure.scatter(x='x', y='y', alpha=0.5, source=data_pts_ds,)
+    bokeh_figure.scatter(x='x', y='y', alpha=0.5, source=plot_data_pts_ds,)
     
     # draw lines
     bokeh_figure.multi_line(
@@ -329,35 +340,47 @@ def get_spectral_network_bokeh_plot(
     # bokeh_obj['redraw_arrows_button'] = redraw_arrows_button
     # notebook_vform_elements.append(redraw_arrows_button)
 
-    # # 'Show data points' button
-    # show_data_points_button = Button(
-    #     label='Show data points',
-    # )
-    # show_data_points_button.js_on_event(
-    #     ButtonClick,
-    #     CustomJS(
-    #         args={'current_ds': current_ds, 'data_pts_ds': data_pts_ds, 'hover': hover},
-    #         code=(custom_js_code + 'show_data_points(current_ds, data_pts_ds, hover);'),
-    #     )
-    # )
-    # bokeh_obj['show_data_points_button'] = show_data_points_button
-    # notebook_vform_elements.append(show_data_points_button)
+    # 'Show data points' button
+    show_data_points_button = Button(
+        label='Show data points',
+    )
+    show_data_points_button.js_on_event(
+        ButtonClick,
+        CustomJS(
+            args={
+                'plot_data_pts_ds' : plot_data_pts_ds,
+                'data_pts_ds': data_pts_ds, 
+                'hover_tool': hover_tool
+            },
+            code=(
+                custom_js_code + 
+                'show_data_points(plot_data_pts_ds, data_pts_ds, hover_tool);'
+            ),
+        )
+    )
+    bokeh_obj['show_data_points_button'] = show_data_points_button
+    notebook_vform_elements.append(show_data_points_button)
 
-    # # 'Hide data points' button
-    # hide_data_points_button = Button(
-    #     label='Hide data points',
-    # )
-    # hide_data_points_button.js_on_event(
-    #     ButtonClick,
-    #     CustomJS(
-    #         args={'current_ds': current_ds, 'data_pts_ds': data_pts_ds, 
-    #           'hover': hover},
-    #         code=(custom_js_code + 'hide_data_points(current_ds, data_pts_ds, 
-    #           hover);'),
-    #     )
-    # )
-    # bokeh_obj['hide_data_points_button'] = hide_data_points_button
-    # notebook_vform_elements.append(hide_data_points_button)
+    # 'Hide data points' button
+    hide_data_points_button = Button(
+        label='Hide data points',
+    )
+    hide_data_points_button.js_on_event(
+        ButtonClick,
+        CustomJS(
+            args={
+                'plot_data_pts_ds' : plot_data_pts_ds,
+                'data_pts_ds': data_pts_ds, 
+                'hover_tool': hover_tool
+            },
+            code=(
+                custom_js_code + 
+                'hide_data_points(plot_data_pts_ds, data_pts_ds, hover_tool);'
+            ),
+        )
+    )
+    bokeh_obj['hide_data_points_button'] = hide_data_points_button
+    notebook_vform_elements.append(hide_data_points_button)
 
     # # Prev/Next soliton tree button
     # tree_idx_ds = ColumnDataSource({'j': ['0']})

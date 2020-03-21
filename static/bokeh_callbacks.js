@@ -1,26 +1,35 @@
-function show_data_points(current_ds, data_pts_ds, hover) {
-    var cd = current_ds.data;
-    var dpd = data_pts_ds.data;
-    dpd['x'] = [];
-    dpd['y'] = [];
+// function show_data_points(current_ds, data_pts_ds, hover) {
+//     var cd = current_ds.data;
+//     var dpd = data_pts_ds.data;
+//     dpd['x'] = [];
+//     dpd['y'] = [];
 
-    for (var i = 0, i_stop = cd['xs'].length; i < i_stop; i++) {
-        dpd['x'] = dpd['x'].concat(cd['xs'][i]);
-        dpd['y'] = dpd['y'].concat(cd['ys'][i]);
+//     for (var i = 0, i_stop = cd['xs'].length; i < i_stop; i++) {
+//         dpd['x'] = dpd['x'].concat(cd['xs'][i]);
+//         dpd['y'] = dpd['y'].concat(cd['ys'][i]);
+//     }
+//     hover.attributes.tooltips = null;
+//     // data_pts_ds.trigger('change');
+//     data_pts_ds.change.emit();
+// }
+
+function show_data_points(plot_data_pts_ds, data_pts_ds, hover_tool) {
+    for (var key in plot_data_pts_ds.data) {
+        plot_data_pts_ds.data[key] = data_pts_ds.data[key]
     }
-    hover.attributes.tooltips = null;
-    // data_pts_ds.trigger('change');
-    data_pts_ds.change.emit();
+
+    hover_tool.attributes.tooltips = null;
+    plot_data_pts_ds.change.emit();
 }
 
-function hide_data_points(data_pts_ds, hover) {
-    var dpd = data_pts_ds.data;
-    dpd['x'] = [];
-    dpd['y'] = [];
+function hide_data_points(plot_data_pts_ds, data_pts_ds, hover_tool) {
+    for (var key in plot_data_pts_ds.data) {
+        plot_data_pts_ds.data[key] = []
+    }
 
-    hover.attributes.tooltips = [['name', '@label'], ['root', '@root']];
+    hover_tool.attributes.tooltips = [['name', '@label'], ['root', '@root']];
     // data_pts_ds.trigger('change');
-    data_pts_ds.change.emit();
+    plot_data_pts_ds.change.emit();
 }
 
 // function sn_slider(cb_obj, current_ds, 
