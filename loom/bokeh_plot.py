@@ -262,7 +262,23 @@ def get_spectral_network_bokeh_plot(
              }
     )
 
-    # collect all daat points from all walls
+    # collect all data points from all walls of all networks
+    all_dp_x = []
+    all_dp_y = []
+    for sn_i in range(len(all_networks_ds)):
+        dp_x = []
+        dp_y = []
+        for dp_i in range(len(all_networks_ds[sn_i])):
+            dp_x += list(all_networks_ds[sn_i]['xs'][dp_i])
+            dp_y += list(all_networks_ds[sn_i]['ys'][dp_i])
+        all_dp_x.append(dp_x)
+        all_dp_y.append(dp_y)
+    all_data_pts_ds = ColumnDataSource({
+        'x': all_dp_x,
+        'y': all_dp_y,
+    })
+
+    # collect all data points from all walls of the initial network
     dp_x = []
     dp_y = []
     for dp_i in range(len(init_data)):
@@ -444,9 +460,13 @@ def get_spectral_network_bokeh_plot(
             'value',
             CustomJS(
                 args={
-                    'all_networks_ds': all_networks_ds, 'sn_idx_ds': sn_idx_ds,
-                    'data_pts_ds': data_pts_ds, 'phases_ds': phases_ds, 
-                    'hover': hover,
+                    'all_networks_ds': all_networks_ds, 
+                    'sn_idx_ds': sn_idx_ds,
+                    'data_pts_ds': data_pts_ds, 
+                    'plot_data_pts_ds': plot_data_pts_ds, 
+                    'all_data_pts_ds': all_data_pts_ds, 
+                    'phases_ds': phases_ds, 
+                    'hover_tool': hover_tool,
                     'plot_options_ds': plot_options_ds, 
                     'tree_idx_ds': tree_idx_ds,
                     'lines_ds' : lines_ds, 'arrows_ds' : arrows_ds
@@ -454,8 +474,10 @@ def get_spectral_network_bokeh_plot(
                 code=(custom_js_code +
                     'sn_slider(' +
                     'cb_obj, ' +
-                    'all_networks_ds, sn_idx_ds, data_pts_ds, phases_ds, '+
-                    'hover, plot_options_ds, tree_idx_ds, lines_ds, arrows_ds)'
+                    'all_networks_ds, sn_idx_ds, data_pts_ds, '+
+                    'plot_data_pts_ds, all_data_pts_ds, phases_ds, '+
+                    'hover_tool, plot_options_ds, tree_idx_ds, lines_ds, '+
+                    'arrows_ds)'
                 ),
             )
         )

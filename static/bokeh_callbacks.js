@@ -18,7 +18,7 @@ function show_data_points(plot_data_pts_ds, data_pts_ds, hover_tool) {
         plot_data_pts_ds.data[key] = data_pts_ds.data[key]
     }
 
-    hover_tool.attributes.tooltips = null;
+    // hover_tool.attributes.tooltips = null;
     plot_data_pts_ds.change.emit();
 }
 
@@ -27,8 +27,7 @@ function hide_data_points(plot_data_pts_ds, data_pts_ds, hover_tool) {
         plot_data_pts_ds.data[key] = []
     }
 
-    hover_tool.attributes.tooltips = [['name', '@label'], ['root', '@root']];
-    // data_pts_ds.trigger('change');
+    // hover_tool.attributes.tooltips = [['name', '@label'], ['root', '@root']];
     plot_data_pts_ds.change.emit();
 }
 
@@ -92,7 +91,8 @@ function hide_data_points(plot_data_pts_ds, data_pts_ds, hover_tool) {
 // }
 
 function sn_slider(cb_obj, //
-    all_networks_ds, sn_idx_ds, data_pts_ds, phases_ds, hover, //
+    all_networks_ds, sn_idx_ds, data_pts_ds, plot_data_pts_ds, //
+    all_data_pts_ds, phases_ds, hover_tool, //
     plot_options_ds, tree_idx_ds, lines_ds, arrows_ds) {
 
     // Declare some local variables
@@ -125,12 +125,26 @@ function sn_slider(cb_obj, //
         }
     }
 
+    // Update the ColumnDataSource of the data points
+    for (var key in data_pts_ds.data ) {
+        data_pts_ds.data[key] = all_data_pts_ds.data[key][sn_idx]
+    }
+
+    // Update the ColumnDataSource of the plotted data points, if they are shown
+    for (var key in plot_data_pts_ds.data ) {
+        if (plot_data_pts_ds.data[key].length > 0) {
+            plot_data_pts_ds.data[key] = all_data_pts_ds.data[key][sn_idx]
+        }
+    }
+
     // push changes to outside data given as argument to this function
     sn_idx_ds.change.emit()
     arrows_ds.change.emit()
     lines_ds.change.emit()
+    data_pts_ds.change.emit()
+    plot_data_pts_ds.change.emit()
 
-    hide_data_points(data_pts_ds, hover);
+    hide_data_points(data_pts_ds, hover_tool);
     if (notebook == 'false') {
         document.getElementById("phase").innerHTML = pd['phase'][sn_idx];
     }
