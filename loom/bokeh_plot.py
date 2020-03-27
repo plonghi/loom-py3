@@ -266,12 +266,9 @@ def get_spectral_network_bokeh_plot(
     all_dp_x = []
     all_dp_y = []
     for sn_i in range(len(all_networks_ds)):
-        print("collecting data of network {}".format(sn_i))
-        print("Its xs entry is a list of length {}".format(len(all_networks_ds[sn_i]['xs'])))
         dp_x = []
         dp_y = []
         for dp_i in range(len(all_networks_ds[sn_i])):
-            print("collecting data of wall {}".format(dp_i))
             dp_x += list(all_networks_ds[sn_i]['xs'][dp_i])
             dp_y += list(all_networks_ds[sn_i]['ys'][dp_i])
         all_dp_x.append(dp_x)
@@ -525,10 +522,8 @@ def get_s_wall_plot_data(s_walls, sw_data, logger_name, sn_phase):
     data_dict['root'] = []
 
     for s_wall in s_walls:
-        print('storing data of wall {}'.format(s_wall.label))
         z_segs = get_splits_with_overlap(s_wall.get_splits(endpoints=True))
         for start, stop in z_segs:
-            print('storing data from segment {}'.format([start, stop]))
             z_r = s_wall.z[start:stop].real
             z_i = s_wall.z[start:stop].imag
             a_i = int(numpy.floor(len(z_r) / 2.0))
