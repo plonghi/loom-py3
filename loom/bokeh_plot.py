@@ -266,9 +266,12 @@ def get_spectral_network_bokeh_plot(
     all_dp_x = []
     all_dp_y = []
     for sn_i in range(len(all_networks_ds)):
+        print("collecting data of network {}".format(sn_i))
+        print("Its data structure contains {} entries".format(len(all_networks_ds[sn_i])))
         dp_x = []
         dp_y = []
         for dp_i in range(len(all_networks_ds[sn_i])):
+            print("collecting data of wall {}".format(dp_i))
             dp_x += list(all_networks_ds[sn_i]['xs'][dp_i])
             dp_y += list(all_networks_ds[sn_i]['ys'][dp_i])
         all_dp_x.append(dp_x)

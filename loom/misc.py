@@ -337,11 +337,13 @@ def get_turning_points(zs):
     """
     Return a list of indices of turning points of a curve on the z-plane,
     i.e. dx/dy = 0 or dy/dx = 0, where x = z[t].real and y = z[t].imag.
+    NOTE: Including the starting point and the ending point of the curve.
     """
     tps = []
+    last = len(zs) - 1
 
     if len(zs) < 3:
-        return tps
+        return [0, last]
 
     x_0 = zs[0].real
     y_0 = zs[0].imag
@@ -357,28 +359,48 @@ def get_turning_points(zs):
             tps.append(t)
         x_0 = x_1
         y_0 = y_1
+
+    if len(tps) > 0:
+        if tps[0] != 0:
+            tps = [0] + tps
+
+        if tps[-1] != last:
+            tps = tps + [last]
+    elif len(tps) == 0:
+        tps = [0, last]
+
     return tps
 
 
 def get_splits_with_overlap(splits):
     """
     Get the start & the end indices of a list according to the splits.
-
-    When the given split is [i_0, i_1, ...], this returns
+    NOTE: Assume that the input includes also the initial and the final point
+    of the trakectory, i.e. is of the form
+    [0, i_0, i_1, ... N-1]
+    for a trajectory of length N.
+    When the given split is as above, this returns
     [
         [0, i_0 + 1],
         [i_0, i_1 + 1],
         ...
+        [i_m, N]
     ]
     """
-    new_splits = []
-    start = 0
-    for split in splits:
-        stop = split + 1
-        new_splits.append((start, stop))
-        start = split
-    new_splits.append((start, None))
-    return new_splits
+    if len(splits) > 0:
+        new_splits = []
+        start = 0
+        for split in splits[1:-1]: 
+            # leaving out the first and last entry, 
+            # which corresponds to 0 and `N'
+            stop = split + 1
+            new_splits.append((start, stop))
+            start = split
+        # adding back tha last entry
+        new_splits.append((start, splits[-1]))
+        return new_splits
+    else:
+        return []
 
 
 def get_data_size_of(obj, debug=False):

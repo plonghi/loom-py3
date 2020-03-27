@@ -1012,9 +1012,13 @@ def find_intersections_of_curves(a_zs, b_zs, accuracy):
 
     a_tps = get_turning_points(a_zs)
     a_z_segs = get_splits_with_overlap(a_tps)
+    print("turning points of the 1st wall : {}".format(a_tps))
+    print("segments of the 1st wall : {}".format(a_z_segs))
 
     b_tps = get_turning_points(b_zs)
     b_z_segs = get_splits_with_overlap(b_tps)
+    print("turning points of the 2nd wall : {}".format(b_tps))
+    print("segments of the 2nd wall : {}".format(b_z_segs))
 
     intersections = []
 
@@ -1030,6 +1034,7 @@ def find_intersections_of_curves(a_zs, b_zs, accuracy):
                     accuracy,
                 )
                 intersections.append((ip_x, ip_y))
+                print("for segments {} and {} found intersection {}".format([a_start, a_stop], [b_start, b_stop], [ip_x, ip_y]))
 
             except NoIntersection:
                 pass
