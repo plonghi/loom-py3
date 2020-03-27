@@ -650,8 +650,6 @@ class SpectralNetwork:
             if prev_s_wall in new_s_wall.parents:
                 continue
 
-            print("first wall {}\nsecond wall {}".format(new_s_wall.label, prev_s_wall.label))
-
             # 2. Split the two S-walls into segments
             # according to the trivialization, then
             # check the compatibility of a pair
@@ -668,9 +666,6 @@ class SpectralNetwork:
                 n_z_f = n_z_splits[n_z_seg_i + 1]
                 p_z_i = p_z_splits[p_z_seg_i]
                 p_z_f = p_z_splits[p_z_seg_i + 1]
-
-                print("{} for {} < z < {}".format(new_s_wall.label, n_z_i, n_z_f))
-                print("{} for {} < z < {}".format(prev_s_wall.label, p_z_i, p_z_f))
 
                 descendant_roots = get_descendant_roots(
                     (prev_s_wall.multiple_local_roots[p_z_seg_i] +
@@ -756,7 +751,6 @@ class SpectralNetwork:
                     # S-walls?
 
                     logger.debug('Intersection at z = {}'.format(ip_z))
-                    print('Intersection at z = {}'.format(ip_z))
 
                     # TODO: check if the following descendant-roots
                     # finding is necessary, note that we calculate
@@ -1017,13 +1011,9 @@ def find_intersections_of_curves(a_zs, b_zs, accuracy):
 
     a_tps = get_turning_points(a_zs)
     a_z_segs = get_splits_with_overlap(a_tps)
-    print("turning points of the 1st wall : {}".format(a_tps))
-    print("segments of the 1st wall : {}".format(a_z_segs))
 
     b_tps = get_turning_points(b_zs)
     b_z_segs = get_splits_with_overlap(b_tps)
-    print("turning points of the 2nd wall : {}".format(b_tps))
-    print("segments of the 2nd wall : {}".format(b_z_segs))
 
     intersections = []
 
@@ -1039,8 +1029,6 @@ def find_intersections_of_curves(a_zs, b_zs, accuracy):
                     accuracy,
                 )
                 intersections.append((ip_x, ip_y))
-                print("for segments {} and {} found intersection {}".format([a_start, a_stop], [b_start, b_stop], [ip_x, ip_y]))
-                print("the real parts are \na_seg:\n{}\nb_seg\n{}".format(a_seg.real, b_seg.real))
 
             except NoIntersection:
                 pass
