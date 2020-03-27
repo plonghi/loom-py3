@@ -751,6 +751,7 @@ class SpectralNetwork:
                     # S-walls?
 
                     logger.debug('Intersection at z = {}'.format(ip_z))
+                    print('Intersection at z = {}'.format(ip_z))
 
                     # TODO: check if the following descendant-roots
                     # finding is necessary, note that we calculate
