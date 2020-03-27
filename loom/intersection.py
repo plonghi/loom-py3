@@ -61,25 +61,30 @@ def find_curve_range_intersection(curve_1, curve_2, cut_at_inflection=False):
         x1_min, x1_max = sorted([x1[0], x1[-1]])
         x2_min, x2_max = sorted([x2[0], x2[-1]])
 
-        y1_min, y1_may = sorted([y1[0], y1[-1]])
-        y2_min, y2_may = sorted([y2[0], y2[-1]])
+        y1_min, y1_max = sorted([y1[0], y1[-1]])
+        y2_min, y2_max = sorted([y2[0], y2[-1]])
     else:
         x1_min, x1_max = numpy.sort(x1)[[0, -1]]
         x2_min, x2_max = numpy.sort(x2)[[0, -1]]
 
-        y1_min, y1_may = numpy.sort(y1)[[0, -1]]
-        y2_min, y2_may = numpy.sort(y2)[[0, -1]]
+        y1_min, y1_max = numpy.sort(y1)[[0, -1]]
+        y2_min, y2_max = numpy.sort(y2)[[0, -1]]
+
+    print('x_min1={}, x_max1={}'.format(x1_min, x1_max))
+    print('x_min2={}, x_max2={}'.format(x2_min, x2_max))
+    print('y_min1={}, y_max1={}'.format(y1_min, y1_max))
+    print('y_min2={}, y_max2={}'.format(y2_min, y2_max))
 
     x1_interval = Interval(x1_min, x1_max)
     x2_interval = Interval(x2_min, x2_max)
 
-    y1_interval = Interval(y1_min, y1_may)
-    y2_interval = Interval(y2_min, y2_may)
+    y1_interval = Interval(y1_min, y1_max)
+    y2_interval = Interval(y2_min, y2_max)
 
     x_range = x1_interval.intersect(x2_interval)
     y_range = y1_interval.intersect(y2_interval)
 
-    return (x_range, y_range)
+    return [x_range, y_range]
 
 
 def find_intersection_of_segments(segment_1, segment_2, accuracy=1e-1,
@@ -110,6 +115,7 @@ def find_intersection_of_segments(segment_1, segment_2, accuracy=1e-1,
     x_range, y_range = find_curve_range_intersection(
         segment_1, segment_2, cut_at_inflection=True
     )
+    print('The x_range and y_range for searching intersections are\n{}\nand\n{}'.format(x_range, y_range))
     if (x_range.is_EmptySet or y_range.is_EmptySet or x_range.is_FiniteSet or
             y_range.is_FiniteSet):
         # The segments and the bin do not share a domain and therefore

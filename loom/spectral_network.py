@@ -650,6 +650,8 @@ class SpectralNetwork:
             if prev_s_wall in new_s_wall.parents:
                 continue
 
+            print("first wall {}\nsecond wall {}".format(new_s_wall.label, prev_s_wall.label))
+
             # 2. Split the two S-walls into segments
             # according to the trivialization, then
             # check the compatibility of a pair
@@ -666,6 +668,9 @@ class SpectralNetwork:
                 n_z_f = n_z_splits[n_z_seg_i + 1]
                 p_z_i = p_z_splits[p_z_seg_i]
                 p_z_f = p_z_splits[p_z_seg_i + 1]
+
+                print("{} for {} < z < {}".format(new_s_wall.label, n_z_i, n_z_f))
+                print("{} for {} < z < {}".format(prev_s_wall.label, p_z_i, p_z_f))
 
                 descendant_roots = get_descendant_roots(
                     (prev_s_wall.multiple_local_roots[p_z_seg_i] +
@@ -1025,7 +1030,7 @@ def find_intersections_of_curves(a_zs, b_zs, accuracy):
     for a_start, a_stop in a_z_segs:
         a_seg = a_zs[a_start:a_stop]
         for b_start, b_stop in b_z_segs:
-            b_seg = a_zs[b_start:b_stop]
+            b_seg = b_zs[b_start:b_stop]
             # Find an intersection on the z-plane.
             try:
                 ip_x, ip_y = find_intersection_of_segments(
@@ -1035,6 +1040,7 @@ def find_intersections_of_curves(a_zs, b_zs, accuracy):
                 )
                 intersections.append((ip_x, ip_y))
                 print("for segments {} and {} found intersection {}".format([a_start, a_stop], [b_start, b_stop], [ip_x, ip_y]))
+                print("the real parts are \na_seg:\n{}\nb_seg\n{}".format(a_seg.real, b_seg.real))
 
             except NoIntersection:
                 pass
