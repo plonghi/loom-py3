@@ -70,6 +70,11 @@ def find_curve_range_intersection(curve_1, curve_2, cut_at_inflection=False):
         y1_min, y1_max = numpy.sort(y1)[[0, -1]]
         y2_min, y2_max = numpy.sort(y2)[[0, -1]]
 
+    print('x_min1={}, x_max1={}'.format(x1_min, x1_max))
+    print('x_min2={}, x_max2={}'.format(x2_min, x2_max))
+    print('y_min1={}, y_max1={}'.format(y1_min, y1_max))
+    print('y_min2={}, y_max2={}'.format(y2_min, y2_max))
+
     x1_interval = Interval(x1_min, x1_max)
     x2_interval = Interval(x2_min, x2_max)
 
@@ -110,6 +115,7 @@ def find_intersection_of_segments(segment_1, segment_2, accuracy=1e-1,
     x_range, y_range = find_curve_range_intersection(
         segment_1, segment_2, cut_at_inflection=True
     )
+    print('The x_range and y_range for searching intersections are\n{}\nand\n{}'.format(x_range, y_range))
     if (x_range.is_EmptySet or y_range.is_EmptySet or x_range.is_FiniteSet or
             y_range.is_FiniteSet):
         # The segments and the bin do not share a domain and therefore
@@ -124,33 +130,41 @@ def find_intersection_of_segments(segment_1, segment_2, accuracy=1e-1,
         logging.debug('try brentq.')
         intersection_x = brentq(delta_f12, x_range.start, x_range.end)
         intersection_y = f1(intersection_x)
+        print('find_intersection_of_segments with brentq')
 
     except ValueError:
-
+        print('cannot find_intersection_of_segments with brentq')
         x0 = 0.5 * (x_range.start + x_range.end)
 
         try:
             logging.debug('try newton with x0 = %.8f.', x0)
             intersection_x = newton(delta_f12, x0, maxiter=newton_maxiter)
             logging.debug('intersection_x = %.8f.', intersection_x)
+            print('intersection_x with newton = {}.'.format(intersection_x))
+            
         except ValueError:
+            print('got ValueError')
             # newton() searches for x outside the interpolation domain.
             # Declare no intersection.
             raise NoIntersection()
         except RuntimeError:
+            print('got RuntimeError')
             # Newton's method fails to converge; declare no intersection
             raise NoIntersection()
 
         # Verify the solution returned by newton().
         if abs(delta_f12(intersection_x)) > accuracy:
+            print('intersection is beyond accuracy')
             raise NoIntersection()
 
         # Check if the intersection is within the curve range.
         # If not, the intersecion is not valid.
         if intersection_x not in x_range:
+            print('intersection is beyond x_range')
             raise NoIntersection()
         intersection_y = f1(intersection_x)
         if intersection_y not in y_range:
+            print('intersection is beyond y_range')
             raise NoIntersection()
 
     return [float(intersection_x), float(intersection_y)]
