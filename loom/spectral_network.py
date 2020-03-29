@@ -18,7 +18,9 @@ from loom.misc import (
     get_descendant_roots, sort_roots, NpEncoder
 )
 from loom.intersection import (
-    NoIntersection, find_intersection_of_segments,
+    NoIntersection, 
+    determine_intersection_point
+    #find_intersection_of_segments,
 )
 from loom.trivialization import BranchPoint
 
@@ -715,7 +717,7 @@ class SpectralNetwork:
                     intersections = get_intersections(
                         new_s_wall.z[n_z_i:n_z_f + 1],
                         prev_s_wall.z[p_z_i:p_z_f + 1],
-                        accuracy,
+                        # accuracy,
                     )
 
                 for ip_x, ip_y in intersections:
@@ -1032,18 +1034,35 @@ def find_intersections_of_curves(a_zs, b_zs, accuracy):
         for b_start, b_stop in b_z_segs:
             b_seg = b_zs[b_start:b_stop]
             # Find an intersection on the z-plane.
-            try:
-                ip_x, ip_y = find_intersection_of_segments(
-                    (a_seg.real, a_seg.imag),
-                    (b_seg.real, b_seg.imag),
-                    accuracy,
+            intersection = determine_intersection_point(
+                    a_seg, b_seg, #accuracy,
                 )
+            if len(intersection) > 0:
+                t_a, t_b, z_int = intersection
+                ip_x = numpy.real(z_int)
+                ip_y = numpy.imag(z_int)
                 intersections.append((ip_x, ip_y))
                 print("for segments {} and {} found intersection {}".format([a_start, a_stop], [b_start, b_stop], [ip_x, ip_y]))
                 print("the real parts are \na_seg:\n{}\nb_seg\n{}".format(a_seg.real, b_seg.real))
-
-            except NoIntersection:
+            
+            else:
                 pass
+            # try:
+            #     # ip_x, ip_y = find_intersection_of_segments(
+            #     #     (a_seg.real, a_seg.imag),
+            #     #     (b_seg.real, b_seg.imag),
+            #     #     accuracy,
+            #     # )
+            #     ip_x, ip_y = determine_intersection_point(
+            #         a_seg, b_seg, #accuracy,
+            #     )
+            #     intersections.append((ip_x, ip_y))
+            #     print("for segments {} and {} found intersection {}".format([a_start, a_stop], [b_start, b_stop], [ip_x, ip_y]))
+            #     print("the real parts are \na_seg:\n{}\nb_seg\n{}".format(a_seg.real, b_seg.real))
+
+            # except NoIntersection:
+            #     print("returned no intersection")
+            #     pass
 
     return intersections
 
