@@ -124,7 +124,8 @@ def n_nearest_indices(a_list, value, n):
     Find n elements of a_list nearest to value and return their indices,
     by comparing the euclidean norms.
     """
-    sorted_indices = sorted(range(len(a_list)), key=(lambda v: abs(v - value)))
+    pairs = [[abs(a_list[i] - value), i] for i in range(len(a_list))]
+    sorted_indices = [p[1] for p in sorted(pairs, key=(lambda v: v[0]))]
     return sorted_indices[:n]
 
 

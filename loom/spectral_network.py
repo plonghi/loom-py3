@@ -717,11 +717,15 @@ class SpectralNetwork:
                     intersections = get_intersections(
                         new_s_wall.z[n_z_i:n_z_f + 1],
                         prev_s_wall.z[p_z_i:p_z_f + 1],
-                        # accuracy,
+                        accuracy,
                     )
+
+                print("got these intersections\n{}".format(intersections))
 
                 for ip_x, ip_y in intersections:
                     ip_z = ip_x + 1j * ip_y
+
+                    print("studying intersection at {}".format(ip_z))
 
                     # Discard apparent intersections of sibling S-walls
                     # that emanate from the same branch point, if they occur
@@ -735,14 +739,18 @@ class SpectralNetwork:
                         and abs(ip_z - prev_s_wall.z[0]) < accuracy
                         and abs(ip_z - new_s_wall.z[0]) < accuracy
                     ):
+                        print("EXIT 1")
                         continue
                     elif (
                         n_nearest_indices(prev_s_wall.z, ip_z, 1)[0] == 0
                         or n_nearest_indices(new_s_wall.z, ip_z, 1)[0] == 0
                     ):
+                        print("nearest indices:\n{}\n{}".format(n_nearest_indices(prev_s_wall.z, ip_z, 1), n_nearest_indices(new_s_wall.z, ip_z, 1)))
+                        print("EXIT 2")
                         continue
                     else:
                         # t_n: index of new_s_wall.z nearest to ip_z
+                        print("EXIT 3")
                         t_n = get_nearest_point_index(
                             new_s_wall.z, ip_z, sw_data.branch_points,
                             accuracy,
@@ -753,6 +761,8 @@ class SpectralNetwork:
                             prev_s_wall.z, ip_z, sw_data.branch_points,
                             accuracy,
                         )
+
+                    print("Intersection survives test, it occurs at times ({},{})".format(t_n, t_p))
 
                     # TODO: need to put the joint into the parent
                     # S-walls?
@@ -1019,13 +1029,9 @@ def find_intersections_of_curves(a_zs, b_zs, accuracy):
 
     a_tps = get_turning_points(a_zs)
     a_z_segs = get_splits_with_overlap(a_tps)
-    print("turning points of the 1st wall : {}".format(a_tps))
-    print("segments of the 1st wall : {}".format(a_z_segs))
 
     b_tps = get_turning_points(b_zs)
     b_z_segs = get_splits_with_overlap(b_tps)
-    print("turning points of the 2nd wall : {}".format(b_tps))
-    print("segments of the 2nd wall : {}".format(b_z_segs))
 
     intersections = []
 
@@ -1042,8 +1048,6 @@ def find_intersections_of_curves(a_zs, b_zs, accuracy):
                 ip_x = numpy.real(z_int)
                 ip_y = numpy.imag(z_int)
                 intersections.append((ip_x, ip_y))
-                print("for segments {} and {} found intersection {}".format([a_start, a_stop], [b_start, b_stop], [ip_x, ip_y]))
-                print("the real parts are \na_seg:\n{}\nb_seg\n{}".format(a_seg.real, b_seg.real))
             
             else:
                 pass
@@ -1064,6 +1068,7 @@ def find_intersections_of_curves(a_zs, b_zs, accuracy):
             #     print("returned no intersection")
             #     pass
 
+    print("found these intersections: {}".format(intersections))
     return intersections
 
 
