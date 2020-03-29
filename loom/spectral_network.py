@@ -302,7 +302,7 @@ class SpectralNetwork:
             use_cgal = True
 
         except OSError:
-            logger.warning('CGAL not available; use interpolation '
+            logger.warning('CGAL not available; use internal algorithm'
                            'to find intersections.')
             get_intersections = find_intersections_of_curves
             use_cgal = False
