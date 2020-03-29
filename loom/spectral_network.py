@@ -652,8 +652,6 @@ class SpectralNetwork:
             if prev_s_wall in new_s_wall.parents:
                 continue
 
-            print("first wall {}\nsecond wall {}".format(new_s_wall.label, prev_s_wall.label))
-
             # 2. Split the two S-walls into segments
             # according to the trivialization, then
             # check the compatibility of a pair
@@ -670,9 +668,6 @@ class SpectralNetwork:
                 n_z_f = n_z_splits[n_z_seg_i + 1]
                 p_z_i = p_z_splits[p_z_seg_i]
                 p_z_f = p_z_splits[p_z_seg_i + 1]
-
-                print("{} for {} < z < {}".format(new_s_wall.label, n_z_i, n_z_f))
-                print("{} for {} < z < {}".format(prev_s_wall.label, p_z_i, p_z_f))
 
                 descendant_roots = get_descendant_roots(
                     (prev_s_wall.multiple_local_roots[p_z_seg_i] +
@@ -720,12 +715,8 @@ class SpectralNetwork:
                         accuracy,
                     )
 
-                print("got these intersections\n{}".format(intersections))
-
                 for ip_x, ip_y in intersections:
                     ip_z = ip_x + 1j * ip_y
-
-                    print("studying intersection at {}".format(ip_z))
 
                     # Discard apparent intersections of sibling S-walls
                     # that emanate from the same branch point, if they occur
@@ -739,18 +730,14 @@ class SpectralNetwork:
                         and abs(ip_z - prev_s_wall.z[0]) < accuracy
                         and abs(ip_z - new_s_wall.z[0]) < accuracy
                     ):
-                        print("EXIT 1")
                         continue
                     elif (
                         n_nearest_indices(prev_s_wall.z, ip_z, 1)[0] == 0
                         or n_nearest_indices(new_s_wall.z, ip_z, 1)[0] == 0
                     ):
-                        print("nearest indices:\n{}\n{}".format(n_nearest_indices(prev_s_wall.z, ip_z, 1), n_nearest_indices(new_s_wall.z, ip_z, 1)))
-                        print("EXIT 2")
                         continue
                     else:
                         # t_n: index of new_s_wall.z nearest to ip_z
-                        print("EXIT 3")
                         t_n = get_nearest_point_index(
                             new_s_wall.z, ip_z, sw_data.branch_points,
                             accuracy,
@@ -762,13 +749,10 @@ class SpectralNetwork:
                             accuracy,
                         )
 
-                    print("Intersection survives test, it occurs at times ({},{})".format(t_n, t_p))
-
                     # TODO: need to put the joint into the parent
                     # S-walls?
 
                     logger.debug('Intersection at z = {}'.format(ip_z))
-                    print('Intersection at z = {}'.format(ip_z))
 
                     # TODO: check if the following descendant-roots
                     # finding is necessary, note that we calculate
@@ -1068,7 +1052,6 @@ def find_intersections_of_curves(a_zs, b_zs, accuracy):
             #     print("returned no intersection")
             #     pass
 
-    print("found these intersections: {}".format(intersections))
     return intersections
 
 

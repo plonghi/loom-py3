@@ -299,18 +299,14 @@ def determine_intersection_point(
     # the function find_potential_intersections
     # with an arbitrary number of clusters
     
-    print ("looking for intersection")
     # potential_intersection = find_potential_intersection(
     #     z_list_1, z_list_2, #int_threshold=accuracy
     # )
     potential_intersection = find_single_intersection(
         z_list_1, z_list_2, #int_threshold=accuracy
     )
-    print("found potential intersection {}".format(potential_intersection))
     if len(potential_intersection) > 0:
         [t1, t2, z_int] = potential_intersection
-        print("checking if parallel")
-        print(are_parallel(z_list_1, z_list_2, t1, t2))
         if are_parallel(z_list_1, z_list_2, t1, t2) == False:
             return potential_intersection
         else:
