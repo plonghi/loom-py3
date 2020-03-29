@@ -82,6 +82,101 @@ def remove_duplicate_intersection(new_ilist, old_ilist):
 #     return [x_range, y_range]
 
 
+def find_single_intersection(
+    z_list_1, z_list_2, int_threshold=0.03,
+    ):
+    """
+    Takes two lists of points in the complex plane, and
+    finds a single pair of points from list 1 and from list 2
+    that are closest to each other, and within a distance
+    from each other |z_1 - z_2| < int_radius.
+    This function returns a list of proper times and the single 
+    intersection point
+    [t1, t2, z_int]
+    corresponding to the positions of the closest points, and to the 
+    estimated actual intersection.
+    """
+    closest_pt = [0, 0, abs(z_list_1[0] - z_list_2[0])]
+    for t1 in list(range(len(z_list_1))):
+        for t2 in list(range(len(z_list_2))):
+            delta = abs(z_list_1[t1] - z_list_2[t2])
+            if delta < closest_pt[2]:
+                closest_pt = [t1, t2, delta]
+
+    if closest_pt[2] < int_threshold:
+        # now we have the times t1 and t2 where the two trajectories
+        # are closest to each other.
+        # Next we find two consdecutive points on the 1st trajectory
+        # and on the second one, such that the segments connecting
+        # them should intersect very close to the actual intersection point
+
+        t1 = closest_pt[0]
+        t2 = closest_pt[1]
+
+        if t1 == (len(z_list_1) - 1):
+            z1_i , z1_f =  [z_list_1[t1 - 1], z_list_1[t1]]
+
+        elif t1 == 0:
+            z1_i , z1_f =  [z_list_1[t1], z_list_1[t1 + 1]]
+
+        else:
+            if (
+                abs(z_list_1[t1 + 1] -z_list_2[t2]) < 
+                abs(z_list_1[t1 - 1] -z_list_2[t2])
+            ):
+                z1_i, z1_f = [z_list_1[t1], z_list_1[t1 + 1]]
+            else:
+                z1_i, z1_f = [z_list_1[t1 - 1], z_list_1[t1]]
+
+        if t2 == (len(z_list_2) - 1):
+            z2_i , z2_f =  [z_list_2[t2 - 1], z_list_2[t2]]
+
+        elif t2 == 0:
+            z2_i , z2_f =  [z_list_2[t2], z_list_2[t2 + 1]]
+
+        else:
+            if (
+                abs(z_list_2[t2 + 1] -z_list_1[t1]) < 
+                abs(z_list_2[t2 - 1] -z_list_1[t1])
+            ):
+                z2_i, z2_f = [z_list_2[t2], z_list_2[t2 + 1]]
+            else:
+                z2_i, z2_f = [z_list_2[t2 - 1], z_list_2[t2]]
+
+        # now consider the linear system of equations 
+        # for the intersection of two lines 
+        # y = a1 x + b1
+        # y = a2 x + b2
+        # where
+        # a1 = Im(z1_f - z1_i) / Re(z1_f - z1_i)
+        # b1 = Im(z1_i) - Re(z1_i) * a1
+        # and similarly for a2, b2.
+        # The intersection point is then at
+        # z = z_r + z_i
+        # with
+        # z_r = (b2 - b1) / (a1 - a2)
+        # z_i = (a1 * b2 - a2 * b1) / (a1 - a2)
+
+        a1 = numpy.imag(z1_f - z1_i) / numpy.real(z1_f - z1_i)
+        b1 = numpy.imag(z1_i) - numpy.real(z1_i) * a1
+        a2 = numpy.imag(z2_f - z2_i) / numpy.real(z2_f - z2_i)
+        b2 = numpy.imag(z2_i) - numpy.real(z2_i) * a2
+
+        z_int_r = (b2 - b1) / (a1 - a2)
+        z_int_i = (a1 * b2 - a2 * b1) / (a1 - a2)
+        z_int = z_int_r + 1j * z_int_i
+
+        return [t1, t2, z_int]
+
+    else:
+        return []
+
+
+
+
+### The following is a method based on clustering of intersections -- now deprecated
+### but may be useful in the future
+
 def k_means(data, k=1, normalize=False, limit=500):
     """Basic k-means clustering algorithm.
     """
@@ -200,10 +295,15 @@ def determine_intersection_point(
     Find a single interection between two trajectories.
     This function assumes that there is only one intersection.
     """
-    # TO DO: generalize to handle multiple intersections
+    # TO DO: generalize to handle multiple intersections, using
+    # the function find_potential_intersections
+    # with an arbitrary number of clusters
     
     print ("looking for intersection")
-    potential_intersection = find_potential_intersection(
+    # potential_intersection = find_potential_intersection(
+    #     z_list_1, z_list_2, #int_threshold=accuracy
+    # )
+    potential_intersection = find_single_intersection(
         z_list_1, z_list_2, #int_threshold=accuracy
     )
     print("found potential intersection {}".format(potential_intersection))
