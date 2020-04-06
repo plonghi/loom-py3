@@ -12,7 +12,7 @@ sage_script_dir = base_dir + '/sage_scripts/'
 # sage_bin_path =  base_dir + '/sage_scripts/sage'
 # On the ETH server, the sage binaries are not installed systemwide
 # but contained in a local subfolder
-if os.path.isdir('/usr/bin/sage'):
+if os.path.isfile('/usr/bin/sage'):
 	# this is the global sage binary path for 
 	# a machine with sage properly installed
 	sage_bin_path =  '/usr/bin/sage'
