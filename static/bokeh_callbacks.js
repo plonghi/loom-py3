@@ -99,6 +99,9 @@ function sn_slider(cb_obj, //
     var sn_idx = cb_obj.value;  // slider's current value
     var show_trees = plot_options_ds.data['show_trees'];
     var notebook = plot_options_ds.data['notebook'];
+    var pd = phases_ds['data'];
+
+    console.log(sn_idx)
 
     // change the index of the current spectral network
     sn_idx_ds.data['i'] = sn_idx;
@@ -260,10 +263,12 @@ function redraw_arrows(current_ds, x_range, y_range) {
 }
 
 function update_plot_range(x_range, y_range) {
-    var x_s = x_range.get('start');
-    var x_e = x_range.get('end');
-    var y_s = y_range.get('start');
-    var y_e = y_range.get('end');
+    console.log(x_range)
+
+    var x_s = x_range['start'];
+    var x_e = x_range['end'];
+    var y_s = y_range['start'];
+    var y_e = y_range['end'];
 
     var plot_range_input = document.getElementById("plot_range_input");
     plot_range_input.value =

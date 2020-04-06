@@ -16,8 +16,8 @@ argv = sys.argv[1:]
 print('__name__={}'.format(__name__))
 print('loom WSGI working directory: {}'.format(os.getcwd()))
 if '_mod_wsgi_' in __name__:
-    f = open(os.devnull, 'w')
-    sys.stdout = f
+    # f = open(os.devnull, 'w')
+    # sys.stdout = f
     print('stdout redirecting failed if this message is shown.')
 
 from loom.api import get_loom_dir
