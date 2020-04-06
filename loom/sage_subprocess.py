@@ -8,7 +8,8 @@ import subprocess
 
 base_dir = os.path.dirname(os.path.realpath(__file__))
 sage_script_dir = base_dir + '/sage_scripts/'
-sage_bin_path = '/usr/bin/sage'
+# sage_bin_path = '/usr/bin/sage'
+sage_bin_path =  base_dir + '/sage_scripts/sage'
 
 
 def solve_system_of_eqs(eqs, precision=None, logger_name='loom',):
