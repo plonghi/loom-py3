@@ -101,8 +101,6 @@ function sn_slider(cb_obj, //
     var notebook = plot_options_ds.data['notebook'];
     var pd = phases_ds['data'];
 
-    console.log(sn_idx)
-
     // change the index of the current spectral network
     sn_idx_ds.data['i'] = sn_idx;
 
@@ -212,10 +210,10 @@ function show_next_soliton_tree(
 
 function redraw_arrows(current_ds, x_range, y_range) {
     var cd = current_ds.data;
-    var x_s = x_range.get('start');
-    var x_e = x_range.get('end');
-    var y_s = y_range.get('start');
-    var y_e = y_range.get('end');
+    var x_s = x_range['start'];
+    var x_e = x_range['end'];
+    var y_s = y_range['start'];
+    var y_e = y_range['end'];
 
     for (var i = 0, i_stop = cd['arrow_x'].length; i < i_stop; i++) {
         // Domain of the segment.
@@ -263,8 +261,6 @@ function redraw_arrows(current_ds, x_range, y_range) {
 }
 
 function update_plot_range(x_range, y_range) {
-    console.log(x_range)
-
     var x_s = x_range['start'];
     var x_e = x_range['end'];
     var y_s = y_range['start'];

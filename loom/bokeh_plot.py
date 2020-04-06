@@ -504,10 +504,8 @@ def get_spectral_network_bokeh_plot(
         # TODO: Include phase text input
         return column(*notebook_vform_elements)
     elif slide is True:
-        print("returning 2")
         return plot
     else:
-        print("returning 3")
         script, div = bokeh.embed.components(bokeh_obj)
         return script, div
 
