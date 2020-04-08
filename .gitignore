@@ -16,4 +16,5 @@ static/loom_plots/
 .venv/
 .sage/
 nohup.out
+wwwloom.wsgi
 
