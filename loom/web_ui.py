@@ -112,13 +112,14 @@ def index():
     loom_contributors = []
     for name_str in loom_contributors_str:
         name = name_str.strip('"')
-        if name == 'plonghi':
-            loom_contributors.append('Pietro Longhi')
-        elif name == 'chan':
-            if 'Chan Y. Park' not in loom_contributors:
-                loom_contributors.append('Chan Y. Park')
-        else:
-            loom_contributors.append(name)
+        if name not in loom_contributors:
+            if name == 'plonghi':
+                loom_contributors.append('Pietro Longhi')
+            elif name == 'chan':
+                if 'Chan Y. Park' not in loom_contributors:
+                    loom_contributors.append('Chan Y. Park')
+            else:
+                loom_contributors.append(name)
 
     return flask.render_template(
         'index.html',
