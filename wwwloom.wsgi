@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 import os
-import sys
 import logging
+import sys
 
 # Adapt PATH and activate virtualenv
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
@@ -15,7 +15,10 @@ if '_mod_wsgi_' in __name__:
     f = open(os.devnull, 'w')
     sys.stdout = f
     print('stdout redirecting failed if this message is shown.')
+
 sys.path.insert(0, BASEDIR + '/loom')
+os.environ['TMPDIR'] = '/home/wwwloom/tmp'
+os.environ['OMP_NUM_THREADS'] = '1'
 
 from loom.api import get_loom_dir
 from loom.web_ui import get_application

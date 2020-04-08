@@ -92,7 +92,10 @@ def parallel_get_spectral_network(
             for sn_phase in phases
         ]
 
-    n_cpu = multiprocessing.cpu_count()
+    if 'OMP_NUM_THREADS' in os.environ:
+        n_cpu = int(os.environ['OMP_NUM_THREADS'])
+    else:
+        n_cpu = multiprocessing.cpu_count()
     if (n_processes == 0):
         # Use all the CPUs.
         n_processes = n_cpu
